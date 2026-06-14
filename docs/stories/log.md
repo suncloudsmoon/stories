@@ -10,3 +10,6 @@ Wrote [[one-graph]] (the unified-kinds decision) and [[the-craft]] (spine-not-te
 
 ## [2026-06-14] research | codex-conventions
 Three-agent sweep on Codex porting (skills/plugins, AGENTS.md, config/commands), filed to [[codex-conventions]]. Verdict: Codex shares the Agent-Skills standard — the port is mostly mechanical, and the skill-only bet ([[the-gate]]) holds. Pending: exact `.codex-plugin/plugin.json` schema (fetch `/codex/plugins/build` before writing the manifest).
+
+## [2026-06-14] author | codex-port saga + bundle
+Shipped the Codex bundle (`codex/`: `.codex-plugin` manifest, symlinked core skills, three command-skills) + root `AGENTS.md`. Filed [[codex-port]] and wired it to [[the-gate]] + [[codex-conventions]]. Standing rule recorded (CLAUDE.md / AGENTS.md / each command skill): update `codex/` when the CC plugin changes.

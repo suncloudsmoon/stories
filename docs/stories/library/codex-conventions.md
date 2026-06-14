@@ -2,7 +2,7 @@
 title: Porting to Codex — the lay of the land
 kind: research
 sources: ["https://developers.openai.com/codex/skills", "https://developers.openai.com/codex/plugins", "https://developers.openai.com/codex/plugins/build", "https://developers.openai.com/codex/hooks", "https://developers.openai.com/codex/guides/agents-md", "https://developers.openai.com/codex/config-reference", "https://developers.openai.com/codex/mcp", "https://agents.md/"]
-links: ["[[origin]]", "[[the-gate]]"]
+links: ["[[origin]]", "[[the-gate]]", "[[codex-port]]"]
 refreshed: 2026-06-14
 ---
 
