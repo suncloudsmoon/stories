@@ -1,8 +1,8 @@
 ---
 title: The Gate, and Why It's a Skill
 kind: saga
-covers: ["skills/stories/SKILL.md", "skills/writing-a-story/SKILL.md"]
-links: ["[[origin]]"]
+covers: ["skills/stories/SKILL.md"]
+links: ["[[origin]]", "[[one-graph]]", "[[the-craft]]"]
 refreshed: 2026-06-14
 ---
 

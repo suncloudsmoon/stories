@@ -1,7 +1,7 @@
 ---
 title: Why stories exists
 kind: origin
-links: ["[[the-gate]]"]
+links: ["[[the-gate]]", "[[one-graph]]", "[[the-craft]]"]
 refreshed: 2026-06-14
 ---
 
