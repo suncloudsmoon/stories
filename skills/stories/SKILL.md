@@ -23,7 +23,7 @@ docs/stories/
   library/      # knowledge: research, syntheses, sources, concepts
 ```
 
-If `docs/stories/` does not exist yet, run `/stories-init` — do not scaffold it ad hoc.
+If `docs/stories/` does not exist yet, run **stories-init** (Claude Code `/stories-init`, Codex `$stories-init`) — do not scaffold it ad hoc.
 
 ### Frontmatter (every page)
 
@@ -91,8 +91,10 @@ The discretionary-ask channel still applies if the findings conflict with existi
 
 ## Refresh & ingest
 
-- `/stories-refresh` — full cleanup across all kinds. Reconcile every page against the code, rewrite stale stories, **delete dead canon and orphans without hesitation**, rebuild the Atlas and the links.
-- `/stories-ingest <source|research>` — file knowledge into `library/` by hand.
+Invoke by name — Claude Code: `/stories-refresh`; Codex: `$stories-refresh`.
+
+- **stories-refresh** — full cleanup across all kinds. Reconcile every page against the code, rewrite stale stories, **delete dead canon and orphans without hesitation**, rebuild the Atlas and the links.
+- **stories-ingest** `<source|research>` — file knowledge into `library/` by hand.
 
 ## Prime directives
 

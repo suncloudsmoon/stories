@@ -1,0 +1,12 @@
+---
+name: stories-refresh
+description: Full cleanup of the stories wiki (docs/stories/) — reconcile every page against the code, rewrite stale stories, delete dead canon, rebuild the Atlas and links. Use when the user asks to refresh or clean up stories. Invoke with $stories-refresh.
+---
+
+Run a full **refresh** of the stories wiki — the manual deep-clean. Be thorough and unafraid to delete. (Mirrors the Claude Code `/stories-refresh` command — keep the two in sync.) Read the `stories` and `writing-a-story` skills first.
+
+1. **Inventory.** List every page under `docs/stories/`; read `index.md` (the Atlas) and `log.md`.
+2. **Reconcile against the code.** For each `saga`/`vignette`: code moved/renamed → fix `covers:` and `path:line`; code deleted → delete the page (dead canon); soul drifted → rewrite to the current truth, to the craft bar. For `library` pages: check `sources:` and links still hold.
+3. **Prune.** Delete orphans and dead canon confidently — stale canon is worse than none. Merge duplicates. Only pause to ask if a page might carry standalone value the code doesn't capture. Flag contradictions; resolve the clear ones, surface the rest.
+4. **Repair the graph.** Fix every broken `[[link]]` and citation; write a story for any code with real soul that lacks one.
+5. **Rebuild & log.** Regenerate `index.md`; append `## [<today>] refresh | <summary>` to `log.md`; report the changes in plain terms.

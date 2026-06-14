@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this repo is
 
-This repo **is** the `stories` Claude Code plugin — a skill-only plugin that maintains a "soul-bearing wiki" (`docs/stories/`) of a codebase: the model reads the relevant stories before a non-trivial change and rewrites them after. There is no application code; the deliverable is markdown skills + slash commands + one JSON manifest.
+This repo **is** the `stories` Claude Code plugin — a skill-only plugin that maintains a "soul-bearing wiki" (`docs/stories/`) of a codebase: the model reads the relevant stories before a non-trivial change and rewrites them after. There is no application code; the deliverable is markdown skills + slash commands + one JSON manifest. It ships in **two homes** — the Claude Code plugin at the repo root (`.claude-plugin/`, `skills/`, `commands/`) and a Codex plugin bundle in `codex/` (`.codex-plugin/`, with the two core skills symlinked back to the root `skills/`).
 
 Design and the reasoning behind every decision: `docs/specs/2026-06-14-stories-plugin-design.md` (§9 is the locked-decisions table — treat it as the source of truth). Build plan: `docs/plans/2026-06-14-stories-plugin-v1.md`.
 
@@ -24,6 +24,10 @@ The gate is armed by **data, not interception**: each story's `covers:` frontmat
 ## The defining invariant: skill-only, portable
 
 The decision that shapes everything is **no hooks, no scripts** — the discipline is best-effort skill prose so it ports to Codex later (`sagas/the-gate.md` explains the trade-off). Don't add hooks to "enforce" behavior without revisiting that decision; it costs the Codex port. The one sanctioned exception on the shelf is a single optional hook for deep-research auto-filing.
+
+## Two homes — keep Codex in sync
+
+The Codex bundle in `codex/` mirrors the Claude Code plugin. **When you change the CC plugin, update `codex/` to match.** The two core skills (`stories`, `writing-a-story`) are symlinked there, so they can't drift — but the three command procedures (`commands/*.md` ↔ `codex/skills/stories-*/SKILL.md`) and the two manifests (`.claude-plugin/plugin.json` ↔ `codex/.codex-plugin/plugin.json`) are duplicated and must be hand-synced. `AGENTS.md` is the Codex sibling of this file — keep the two aligned. Codex porting notes live in `docs/stories/library/codex-conventions.md`.
 
 ## Editing the rules — keep them in sync
 

@@ -36,6 +36,10 @@ docs/stories/
 
 `stories` lives in its own namespace and its own `docs/` subdir. It works **with or without** superpowers and never replaces it.
 
+## Codex
+
+A Codex plugin bundle lives in `codex/` — `.codex-plugin/` plus skills, with the two core skills symlinked to the root `skills/` (single source, no drift). Same behavior, Codex-native packaging; invoke the commands as `$stories-init` etc. See `codex/README.md` for install. Porting notes: `docs/stories/library/codex-conventions.md`.
+
 ## Design
 
 See `docs/specs/2026-06-14-stories-plugin-design.md` for the full design and the decisions behind it.

@@ -130,14 +130,16 @@ commands/
 ```
 - The `stories` skill's `description` triggers on building/refactoring/researching so it loads at the right moment.
 - Own skill namespace, own `docs/` subdir. **Works with or without superpowers; never replaces it.**
-- **Codex port (later):** keep CC-specific glue (manifest, command frontmatter) thin; the portable value is the skill prose. Markdown travels.
+- **Codex port (shipped):** a separate bundle in `codex/` — `.codex-plugin/plugin.json` + `skills/` (the two core skills symlinked to the root `skills/`; the three commands re-expressed as Codex skills, since Codex has no user-defined `/commands`). A root `AGENTS.md` carries the dogfood discipline for Codex. The CC plugin is untouched. Symlinks keep the core from drifting; the command skills + manifests are hand-synced. Research: `docs/stories/library/codex-conventions.md`.
 - **Dogfood:** this repo is the plugin's source *and* grows its own `docs/stories/` describing the plugin's own soul — the plugin documents itself with itself.
 
 ## 8. v1 scope
 
 **In:** manifest · both skills · `/stories-init` · `/stories-refresh` · `/stories-ingest` (incl. deep-research auto-ingest) · the index/log/origin/sagas/library conventions · `kind:` frontmatter.
 
-**Deferred:** `/stories-ask` compounding (v1.1) · file-level vignettes (add when a file earns one) · a separate `/stories-lint` report (folded into refresh for now) · the Codex port · any search CLI (the Atlas suffices at this scale, per `.ref/llm-wiki.md`) · the optional deep-research hardening hook.
+**Deferred:** `/stories-ask` compounding (v1.1) · file-level vignettes (add when a file earns one) · a separate `/stories-lint` report (folded into refresh for now) · any search CLI (the Atlas suffices at this scale, per `.ref/llm-wiki.md`) · the optional deep-research hardening hook.
+
+*Update (2026-06-14): the Codex port, originally deferred, shipped — see §7 and decision #12.*
 
 ## 9. Decisions locked (from brainstorming)
 
@@ -154,6 +156,7 @@ commands/
 | 9 | General-wiki accommodation | Unified graph via `kind:`; `library/` realm |
 | 10 | Deep-research | Auto-ingested via standing skill rule |
 | 11 | Authoring | Read-before-write — ground each story in the actual code/sources; never guess |
+| 12 | Codex port | Separate `codex/` bundle; core skills symlinked (no drift); commands → Codex skills; root `AGENTS.md` dogfood config; CC untouched; command skills + manifests hand-synced |
 
 ## 10. Risks & notes
 

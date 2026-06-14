@@ -1,0 +1,20 @@
+# AGENTS.md
+
+Guidance for AI coding agents (Codex and other AGENTS.md-aware tools) working in this repository. Codex auto-loads this at session start. The Claude Code equivalent is `CLAUDE.md`.
+
+## What this repo is
+
+This repo **is** the `stories` plugin — a skill-only plugin that maintains a "soul-bearing wiki" (`docs/stories/`) of a codebase: read the relevant stories before a non-trivial change, rewrite them after. It ships in two homes:
+
+- **Claude Code** plugin at the repo root (`.claude-plugin/`, `skills/`, `commands/`).
+- **Codex** plugin bundle in `codex/` (`.codex-plugin/`, `skills/` — the two core skills are symlinks back to the root `skills/`).
+
+Design + decisions: `docs/specs/2026-06-14-stories-plugin-design.md`. Codex porting notes: `docs/stories/library/codex-conventions.md`.
+
+## Honor the stories discipline (dogfood)
+
+`docs/stories/` is this repo's own canon. Before a behavior/structure/soul change, read the covering stories — open `docs/stories/index.md` (the Atlas) and any story whose `covers:` matches the files you'll touch. After the change, update those stories plus the Atlas and `docs/stories/log.md`. The full discipline is the `stories` skill (`skills/stories/SKILL.md`); the craft is `writing-a-story`. Write stories from knowledge — read the code first, never guess.
+
+## Keep the two homes in sync
+
+When the Claude Code plugin changes, update the Codex bundle in `codex/` to match (and vice versa). The two core skills are symlinked, so they can't drift. The three command procedures (`commands/*.md` ↔ `codex/skills/stories-*/SKILL.md`) and the two manifests (`.claude-plugin/plugin.json` ↔ `codex/.codex-plugin/plugin.json`) are duplicated and MUST be hand-synced.
