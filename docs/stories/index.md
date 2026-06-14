@@ -14,4 +14,4 @@ The map of this wiki. Read me first, then follow the links.
 _(none yet — a vignette is born when a single file earns one.)_
 
 ## Library
-_(empty — deep research, syntheses, and sources land here.)_
+- [[codex-conventions]] — porting to Codex: what maps cleanly (skills, plugins, AGENTS.md) and what must adapt (commands→skills).
