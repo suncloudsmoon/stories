@@ -13,3 +13,6 @@ Three-agent sweep on Codex porting (skills/plugins, AGENTS.md, config/commands),
 
 ## [2026-06-14] author | codex-port saga + bundle
 Shipped the Codex bundle (`codex/`: `.codex-plugin` manifest, symlinked core skills, three command-skills) + root `AGENTS.md`. Filed [[codex-port]] and wired it to [[the-gate]] + [[codex-conventions]]. Standing rule recorded (CLAUDE.md / AGENTS.md / each command skill): update `codex/` when the CC plugin changes.
+
+## [2026-06-14] feat | canon lint + dormant-by-default
+Added the read-only health-check — `scripts/lint-canon.py` + `/stories-lint` (and the Codex mirror) — filed [[the-lint]]. It checks links, covers, citations, manifest + command drift, git-staleness, and coverage, making silent drift visible and enforcing the two-homes sync mechanically. Also made the discipline **dormant by default**: no `docs/stories/` ⇒ stay quiet, suggest init at most once. The new command pair brings the hand-synced set to four; manifests bumped to 0.2.0.
