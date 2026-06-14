@@ -6,7 +6,7 @@ The Codex plugin packaging of **stories**. The Claude Code version lives at the 
 
 - `.codex-plugin/plugin.json` — the Codex plugin manifest (`skills: "./skills/"`).
 - `skills/stories`, `skills/writing-a-story` — **symlinks** to the repo-root `skills/`. Single source of truth; they cannot drift.
-- `skills/stories-init`, `skills/stories-refresh`, `skills/stories-ingest` — the three commands, as Codex skills. Codex has no user-defined `/commands`, so these are invoked as `$stories-init`, `$stories-refresh`, `$stories-ingest` (or auto-selected by description).
+- `skills/stories-init`, `skills/stories-refresh`, `skills/stories-ingest`, `skills/stories-lint` — the commands, as Codex skills. Codex has no user-defined `/commands`, so these are invoked as `$stories-init` … `$stories-lint` (or auto-selected by description).
 
 ## Install
 
@@ -38,4 +38,4 @@ To register via a marketplace file, add an entry pointing at this bundle with a 
 
 ## Keeping in sync
 
-When the Claude Code plugin changes, update this bundle to match. The two core skills are symlinked (auto-synced). The three command skills here mirror the root `commands/*.md`, and the manifest mirrors `.claude-plugin/plugin.json` — both must be hand-synced.
+When the Claude Code plugin changes, update this bundle to match. The two core skills are symlinked (auto-synced). The command skills here mirror the root `commands/*.md`, and the manifest mirrors `.claude-plugin/plugin.json` — both must be hand-synced. `python3 scripts/lint-canon.py` checks for drift.

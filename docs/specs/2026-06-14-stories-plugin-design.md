@@ -113,6 +113,7 @@ Includes a quality checklist and guidance on voice, citation, and using myth spa
 - **`/stories-init`** — bootstrap `docs/stories/` in a repo: create the skeleton, interview the user, write the origin saga.
 - **`/stories-refresh`** — full cleanup/refresh across all kinds (§3.5).
 - **`/stories-ingest <source | research>`** — manually file knowledge into `library/`: read it → write a page → update neighbors + Atlas + log + cross-link.
+- **`/stories-lint`** — read-only canon health-check: runs `scripts/lint-canon.py` (links, covers, citations, manifest + command drift, git-staleness, coverage), then adds judgment and routes rewrites to refresh.
 - **`/stories-ask <question>`** *(v1.1)* — query the whole graph → synthesize with citations → optionally file the answer back as a new page, so explorations compound.
 
 ## 7. Packaging
@@ -137,7 +138,7 @@ commands/
 
 **In:** manifest · both skills · `/stories-init` · `/stories-refresh` · `/stories-ingest` (incl. deep-research auto-ingest) · the index/log/origin/sagas/library conventions · `kind:` frontmatter.
 
-**Deferred:** `/stories-ask` compounding (v1.1) · file-level vignettes (add when a file earns one) · a separate `/stories-lint` report (folded into refresh for now) · any search CLI (the Atlas suffices at this scale, per `.ref/llm-wiki.md`) · the optional deep-research hardening hook.
+**Deferred:** `/stories-ask` compounding (v1.1) · file-level vignettes (add when a file earns one) · any search CLI (the Atlas suffices at this scale, per `.ref/llm-wiki.md`) · the optional deep-research hardening hook.
 
 *Update (2026-06-14): the Codex port, originally deferred, shipped — see §7 and decision #12.*
 
@@ -157,6 +158,8 @@ commands/
 | 10 | Deep-research | Auto-ingested via standing skill rule |
 | 11 | Authoring | Read-before-write — ground each story in the actual code/sources; never guess |
 | 12 | Codex port | Separate `codex/` bundle; core skills symlinked (no drift); commands → Codex skills; root `AGENTS.md` dogfood config; CC untouched; command skills + manifests hand-synced |
+| 13 | Canon lint | Read-only `scripts/lint-canon.py` + `/stories-lint`; dev/CI tool, not shipped runtime (skill-only invariant holds); lint diagnoses, refresh treats |
+| 14 | Activation | Dormant by default — active only where `docs/stories/` exists; suggest init at most once, never force |
 
 ## 10. Risks & notes
 

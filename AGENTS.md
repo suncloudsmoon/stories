@@ -17,4 +17,4 @@ Design + decisions: `docs/specs/2026-06-14-stories-plugin-design.md`. Codex port
 
 ## Keep the two homes in sync
 
-When the Claude Code plugin changes, update the Codex bundle in `codex/` to match (and vice versa). The two core skills are symlinked, so they can't drift. The three command procedures (`commands/*.md` ↔ `codex/skills/stories-*/SKILL.md`) and the two manifests (`.claude-plugin/plugin.json` ↔ `codex/.codex-plugin/plugin.json`) are duplicated and MUST be hand-synced.
+When the Claude Code plugin changes, update the Codex bundle in `codex/` to match (and vice versa). The two core skills are symlinked, so they can't drift. The command procedures (`commands/*.md` ↔ `codex/skills/stories-*/SKILL.md`) and the two manifests (`.claude-plugin/plugin.json` ↔ `codex/.codex-plugin/plugin.json`) are duplicated and MUST be hand-synced. Run `python3 scripts/lint-canon.py` (or `$stories-lint`) to verify the two homes haven't drifted.

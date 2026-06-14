@@ -1,6 +1,6 @@
 ---
 name: stories
-description: Use whenever working in a repo that has (or should have) a docs/stories/ wiki — BEFORE any behavior-or-structure change (new feature, refactor, interface/API change, moving or deleting code) read the relevant stories, and AFTER such a change rewrite them. Also when filing deep-research results, sources, or knowledge. Establishes the read-before-change gate, the conflict-only ask rule, auto-authoring, and the soul-bearing canon conventions.
+description: Use when working in a repo that HAS a docs/stories/ wiki — BEFORE any behavior/structure/soul change (new feature, refactor, interface/API change, moving or deleting code) read the covering stories, and AFTER such a change rewrite them. Also when filing deep-research results, sources, or knowledge. Establishes the read-before-change gate, the conflict-only ask rule, auto-authoring, and the soul-bearing canon conventions. If the repo has no docs/stories/, stay dormant — suggest stories-init at most once, never force it.
 ---
 
 # Stories — the soul of this codebase
@@ -10,6 +10,10 @@ A **story** captures the *why* of code, not the *what*. The code already says wh
 The same wiki also holds **knowledge**: deep-research results, syntheses, sources, concepts. One interlinked graph. A `kind:` field decides how each page behaves.
 
 > Craft matters. When you write or rewrite any page, follow the **`writing-a-story`** skill. A story is a work of art, not a changelog.
+
+## Dormant by default
+
+This discipline is **opt-in per repo.** If `docs/stories/` exists, honor it fully — the read-gate, auto-authoring, and the rules below. If it does **not** exist, stay dormant: do the user's work normally, and at most **suggest** `stories-init` once, when a project would clearly benefit. Never nag, and never scaffold a wiki the user did not ask for.
 
 ## The canon on disk
 
@@ -23,7 +27,7 @@ docs/stories/
   library/      # knowledge: research, syntheses, sources, concepts
 ```
 
-If `docs/stories/` does not exist yet, run **stories-init** (Claude Code `/stories-init`, Codex `$stories-init`) — do not scaffold it ad hoc.
+When the user wants a wiki, run **stories-init** (Claude Code `/stories-init`, Codex `$stories-init`) to create the structure — never scaffold it ad hoc. If `docs/stories/` is absent and the user has not asked, stay dormant (see above).
 
 ### Frontmatter (every page)
 

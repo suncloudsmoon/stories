@@ -8,7 +8,7 @@ It's a storytelling take on the LLM-wiki pattern — an LLM-maintained, compound
 
 ## How it works
 
-- **Skill-only.** No hooks, no scripts — an always-on skill carries the discipline. Portable, with a Codex port planned.
+- **Skill-only.** No hooks, no runtime scripts — an always-on skill carries the discipline (a dev-only `scripts/lint-canon.py` checks canon health but ships nothing to users). Portable — and ported to Codex (see `codex/`).
 - **Read-before-change gate.** Before a change that reshapes the repo's behavior, structure, or soul (feature, refactor, interface change, moving/deleting code) the model reads the stories whose `covers:` matches the files in play. Routine bug fixes and cosmetics are exempt — *unless* they're significant enough to change the repository, in which case they're storied too.
 - **Low friction.** Reading never interrupts you. The model proceeds on judgment and stops to ask only on a real conflict — or when something genuinely warrants your attention.
 - **Auto-author.** After a gated change, the model rewrites the affected stories in the same session.
@@ -31,6 +31,7 @@ docs/stories/
 - `/stories-init` — bootstrap `docs/stories/`, interview you, write the origin saga.
 - `/stories-refresh` — full cleanup: reconcile against the code, rewrite stale, delete dead canon, rebuild the Atlas.
 - `/stories-ingest <source|research>` — file knowledge into the library by hand.
+- `/stories-lint` — read-only health-check: drift, staleness, dead links/citations, two-homes sync.
 
 ## Coexistence
 

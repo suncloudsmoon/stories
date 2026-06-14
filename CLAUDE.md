@@ -27,7 +27,7 @@ The decision that shapes everything is **no hooks, no scripts** — the discipli
 
 ## Two homes — keep Codex in sync
 
-The Codex bundle in `codex/` mirrors the Claude Code plugin. **When you change the CC plugin, update `codex/` to match.** The two core skills (`stories`, `writing-a-story`) are symlinked there, so they can't drift — but the three command procedures (`commands/*.md` ↔ `codex/skills/stories-*/SKILL.md`) and the two manifests (`.claude-plugin/plugin.json` ↔ `codex/.codex-plugin/plugin.json`) are duplicated and must be hand-synced. `AGENTS.md` is the Codex sibling of this file — keep the two aligned. Codex porting notes live in `docs/stories/library/codex-conventions.md`.
+The Codex bundle in `codex/` mirrors the Claude Code plugin. **When you change the CC plugin, update `codex/` to match.** The two core skills (`stories`, `writing-a-story`) are symlinked there, so they can't drift — but the command procedures (`commands/*.md` ↔ `codex/skills/stories-*/SKILL.md`) and the two manifests (`.claude-plugin/plugin.json` ↔ `codex/.codex-plugin/plugin.json`) are duplicated and must be hand-synced. `python3 scripts/lint-canon.py` checks both mechanically. `AGENTS.md` is the Codex sibling of this file — keep the two aligned. Codex porting notes live in `docs/stories/library/codex-conventions.md`.
 
 ## Editing the rules — keep them in sync
 
@@ -36,5 +36,6 @@ The behavioral contract — especially the gate-line and its default-exempt list
 ## Validate
 
 No build, no test framework. Sanity checks:
+- `python3 scripts/lint-canon.py` — full canon health-check (links, covers, citations, manifest + command drift, git-staleness, coverage); exits nonzero on errors. Run before commits / in CI. `/stories-lint` adds model judgment on top.
 - `python3 -c "import json; json.load(open('.claude-plugin/plugin.json'))"` — manifest parses.
 - Skills and commands are markdown with YAML frontmatter (`name`/`description`); the frontmatter block must be the first thing in the file.
