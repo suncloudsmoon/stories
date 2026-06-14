@@ -4,7 +4,8 @@
 A DEV/CI tool, not plugin runtime — the skill-only discipline still ships
 untouched (see docs/stories/sagas/the-gate.md). This just makes drift visible.
 
-Run from anywhere:  python3 scripts/lint-canon.py
+Run from anywhere:  python3 scripts/lint-canon.py [repo-path]
+(no arg = this plugin's repo; pass a path to lint a consumer repo's docs/stories/)
 """
 import json
 import re
@@ -13,8 +14,13 @@ import sys
 from glob import glob
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent
+ROOT = Path(sys.argv[1]).resolve() if len(sys.argv) > 1 else Path(__file__).resolve().parent.parent
 STORIES = ROOT / "docs" / "stories"
+# Manifest/command-drift checks are specific to THIS plugin's repo. In a
+# consumer repo (just a docs/stories/ wiki) they're skipped automatically.
+IS_PLUGIN_REPO = (ROOT / ".claude-plugin" / "plugin.json").exists() and (
+    ROOT / "codex" / ".codex-plugin" / "plugin.json"
+).exists()
 
 # What counts as "source" for the coverage-gap check (INFO only). Tune freely.
 SOURCE_GLOBS = ["skills/*/SKILL.md", "scripts/*.py"]
@@ -131,23 +137,22 @@ for name in pages:
     if name not in ("index", "log", "origin") and inbound.get(name, 0) == 0:
         warns.append(f"{name}: orphan (no inbound [[links]])")
 
-# ---- manifest drift ----
-try:
-    a, b = json.loads(read(MANIFESTS[0])), json.loads(read(MANIFESTS[1]))
-    for f in MANIFEST_FIELDS:
-        if a.get(f) != b.get(f):
-            errors.append(f"manifest drift on '{f}': {a.get(f)!r} (claude) != {b.get(f)!r} (codex)")
-except Exception as e:
-    errors.append(f"manifest read failed: {e}")
-
-# ---- command drift (CC <-> Codex, by step structure) ----
-for cc, cx in COMMAND_PAIRS:
-    if not (ROOT / cc).exists():
-        errors.append(f"missing CC command: {cc}")
-    elif not (ROOT / cx).exists():
-        errors.append(f"missing Codex skill: {cx}")
-    elif step_titles(read(cc)) != step_titles(read(cx)):
-        warns.append(f"command drift: {cc} and {cx} have different step structure")
+# ---- manifest + command drift (this plugin's repo only) ----
+if IS_PLUGIN_REPO:
+    try:
+        a, b = json.loads(read(MANIFESTS[0])), json.loads(read(MANIFESTS[1]))
+        for f in MANIFEST_FIELDS:
+            if a.get(f) != b.get(f):
+                errors.append(f"manifest drift on '{f}': {a.get(f)!r} (claude) != {b.get(f)!r} (codex)")
+    except Exception as e:
+        errors.append(f"manifest read failed: {e}")
+    for cc, cx in COMMAND_PAIRS:
+        if not (ROOT / cc).exists():
+            errors.append(f"missing CC command: {cc}")
+        elif not (ROOT / cx).exists():
+            errors.append(f"missing Codex skill: {cx}")
+        elif step_titles(read(cc)) != step_titles(read(cx)):
+            warns.append(f"command drift: {cc} and {cx} have different step structure")
 
 # ---- coverage gap (INFO) ----
 covered = set()
