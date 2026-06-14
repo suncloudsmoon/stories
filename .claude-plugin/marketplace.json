@@ -1,0 +1,16 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "stories",
+  "description": "A soul-bearing wiki for your codebase — read the stories before non-trivial changes, rewrite them after. Doubles as a knowledge wiki for deep research.",
+  "owner": {
+    "name": "suncloudsmoon"
+  },
+  "plugins": [
+    {
+      "name": "stories",
+      "description": "A soul-bearing wiki for your codebase. Capture the why, not the what: a read-before-change gate, auto-authoring, and deep-research auto-filing. Dormant until docs/stories/ exists.",
+      "source": "./",
+      "category": "productivity"
+    }
+  ]
+}

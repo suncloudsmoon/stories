@@ -6,6 +6,17 @@ Most docs describe *what* the code does. Stories capture the ***why*** — the t
 
 It's a storytelling take on the LLM-wiki pattern — an LLM-maintained, compounding markdown knowledge base — repointed from "a knowledge base of sources" to "the soul of a codebase."
 
+## Install (Claude Code)
+
+```bash
+# from a local clone of this repo:
+claude plugin marketplace add /path/to/stories
+claude plugin install stories@stories
+# once published, instead:  claude plugin marketplace add <owner>/stories
+```
+
+Restart Claude Code to load it. The plugin stays **dormant** until a repo has `docs/stories/` — run `/stories-init` there to create one.
+
 ## How it works
 
 - **Skill-only.** No hooks, no runtime scripts — an always-on skill carries the discipline (a dev-only `scripts/lint-canon.py` checks canon health but ships nothing to users). Portable — and ported to Codex (see `codex/`).
