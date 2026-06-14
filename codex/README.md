@@ -22,7 +22,7 @@ To register via a marketplace file, add an entry pointing at this bundle with a 
 
 ```json
 {
-  "name": "stories-marketplace",
+  "name": "suncloudsmoon",
   "plugins": [
     {
       "name": "stories",

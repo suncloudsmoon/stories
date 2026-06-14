@@ -1,6 +1,6 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
-  "name": "stories",
+  "name": "suncloudsmoon",
   "description": "A soul-bearing wiki for your codebase — read the stories before non-trivial changes, rewrite them after. Doubles as a knowledge wiki for deep research.",
   "owner": {
     "name": "suncloudsmoon"

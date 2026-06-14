@@ -10,8 +10,8 @@ It's a storytelling take on the LLM-wiki pattern — an LLM-maintained, compound
 
 ```bash
 # from a local clone of this repo:
-claude plugin marketplace add /path/to/stories
-claude plugin install stories@stories
+claude plugin marketplace add /path/to/stories   # registers marketplace "suncloudsmoon"
+claude plugin install stories@suncloudsmoon
 # once published, instead:  claude plugin marketplace add <owner>/stories
 ```
 
