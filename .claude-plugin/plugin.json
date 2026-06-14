@@ -1,0 +1,9 @@
+{
+  "name": "stories",
+  "version": "0.1.0",
+  "description": "A soul-bearing wiki for your codebase. The model reads the relevant stories before any non-trivial change and rewrites them after — capturing the why, not the what. Doubles as a general knowledge wiki for deep-research results, syntheses, and sources.",
+  "author": {
+    "name": "suncloudsmoon"
+  },
+  "keywords": ["documentation", "wiki", "stories", "knowledge-base", "soul"]
+}
