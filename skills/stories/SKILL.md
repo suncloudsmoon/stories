@@ -1,6 +1,6 @@
 ---
 name: stories
-description: Use when working in a repo that HAS a docs/stories/ wiki — BEFORE any behavior/structure/soul change (new feature, refactor, interface/API change, moving or deleting code) read the covering stories, and AFTER such a change rewrite them. Also when filing deep-research results, sources, or knowledge. Establishes the read-before-change gate, the conflict-only ask rule, auto-authoring, and the soul-bearing canon conventions. If the repo has no docs/stories/, stay dormant — suggest stories-init at most once, never force it.
+description: Use when working in a repo that HAS a docs/stories/ wiki — BEFORE any behavior/structure/soul change (new feature, refactor, interface/API change, moving or deleting code) read the covering stories, and AFTER such a change rewrite them. Also when filing deep-research results, sources, or knowledge, and when creating or updating the shape-map (BLOCK_DIAGRAM.md / docs/stories/systems/). Establishes the read-before-change gate, the conflict-only ask rule, auto-authoring, the systems layer, and the soul-bearing canon conventions. If the repo has no docs/stories/, stay dormant — suggest stories-init at most once, never force it.
 ---
 
 # Stories — the soul of this codebase
@@ -24,8 +24,11 @@ docs/stories/
   origin.md     # the origin saga — why this project exists, its soul, the maker's preferences as lore
   sagas/        # code subsystem & flow soul (cross-file)
   vignettes/    # optional file-level shorts
+  systems/      # the shape-map — one block-diagram page per segment (kind: system)
   library/      # knowledge: research, syntheses, sources, concepts
 ```
+
+Plus one artifact **outside** the wiki: `BLOCK_DIAGRAM.md` at the repo root — the shape-map's human face, derived from the `systems/` pages (see *The systems layer* below).
 
 When the user wants a wiki, run **stories-init** (Claude Code `/stories-init`, Codex `$stories-init`) to create the structure — never scaffold it ad hoc. If `docs/stories/` is absent and the user has not asked, stay dormant (see above).
 
@@ -34,7 +37,7 @@ When the user wants a wiki, run **stories-init** (Claude Code `/stories-init`, C
 ```yaml
 ---
 title:     <string>
-kind:      origin | saga | vignette | research | concept | source | reference
+kind:      origin | saga | vignette | system | research | concept | source | reference
 covers:    ["<glob>", ...]      # CODE kinds only — this is what arms the gate
 sources:   ["<url|path>", ...]  # KNOWLEDGE kinds only — provenance
 links:     ["[[other-page]]"]
@@ -50,9 +53,19 @@ Cross-link pages with `[[page-name]]`. Cite code as `path:line`.
 |---|---|---|---|
 | `origin` | `/stories-init`, refresh | — | full soul |
 | `saga`, `vignette` | a code change (auto) | **YES** (`covers:`) | full soul |
+| `system` | init, refresh, or a structural change (auto) | **YES** (`covers:`) | legible + complete (shape, not soul) |
 | `research`, `concept` | ingest / query | no | full soul (synthesis) |
 | `source` | ingest | no | faithful + tight |
 | `reference` | manual | no | pointer only |
+
+## The systems layer — the shape-map
+
+Stories carry the *why*; **system pages** carry the *shape*: block-diagram maps of how the app is put together — exhaustive where stories are curated. Everything in the program is accounted for by some block. Two artifacts:
+
+- **`docs/stories/systems/<segment>.md` — source of truth.** One page per top-level block; you choose the segmentation (frontend/backend, pipeline stages, packages — whatever the repo's true shape is). Body: plain-language lead (one breath) → a segment-level Mermaid diagram if inner structure earns one → the parts and what each does, cited `path:line` → boundaries (what it exposes, what it must not know) → `[[links]]` to the sagas carrying its why. Block granularity always — the moment a page reads like a directory listing it has failed its bar.
+- **`BLOCK_DIAGRAM.md` at the repo root — the face,** derived by you from the systems pages (never a script). Contents in order: one plain-language paragraph on what the app is (the top level stays jargon-free; technicals live one link down); the top-level Mermaid `flowchart` (node id = page slug with `-`→`_`); a **legend table** — block → one-line plain description → link to its systems page (the legend is the guaranteed "click"; also emit Mermaid `click <id> "<path>"` directives — a bonus some renderers strip); a `## New since <YYYY-MM-DD>` section naming recently added/reshaped blocks, styled `classDef new` in the diagram and aged out at refresh once older than ~14 days (dates from `log.md`); and the footer marker `<!-- derived by the stories plugin — source of truth: docs/stories/systems/ -->`.
+
+Rules: **never overwrite** a hand-written `BLOCK_DIAGRAM.md`/`ARCHITECTURE.md` that lacks the marker — that is a conflict, surface it. A tiny repo may carry the whole map in the root file and grow `systems/` pages only when a segment earns one. Structural change ⇒ update the affected system pages in the same session, and re-derive the root file when the top-level picture moves.
 
 ## The gate — read before you change
 
@@ -75,7 +88,7 @@ new feature · refactor · interface/API change · moving or deleting code · an
 
 A gated change is not done until the canon reflects it. In the **same session, as part of the work** (no separate prompt):
 
-- update every story whose soul shifted,
+- update every story whose soul shifted, and every system page whose shape shifted (re-derive `BLOCK_DIAGRAM.md` when the top-level picture moved),
 - write a new saga (or vignette) if you introduced new soul,
 - update `index.md` and append to `log.md`,
 - fix any `[[links]]` you broke.
