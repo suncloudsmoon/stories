@@ -90,6 +90,7 @@ refreshed: YYYY-MM-DD
 | `origin` | `/stories-init`, refresh | — | full soul |
 | `saga` | code change → auto-authored | **yes** (`covers:`) | full soul |
 | `vignette` | code change → auto-authored | **yes** (`covers:`) | full soul |
+| `system` | init / refresh / structural change → auto | **yes** (`covers:`) | legible + complete (shape, not soul) |
 | `research` | ingest (manual or deep-research auto) | no | full soul (synthesis) |
 | `concept` | ingest / query | no | full soul (synthesis) |
 | `source` | ingest | no | faithful + tight (no forced art) |
@@ -142,6 +143,8 @@ commands/
 
 *Update (2026-06-14): the Codex port, originally deferred, shipped — see §7 and decision #12.*
 
+*Update (2026-07-01): the systems layer (shape-map) shipped — `kind: system` + root `BLOCK_DIAGRAM.md`. See `2026-07-01-systems-layer-design.md`.*
+
 ## 9. Decisions locked (from brainstorming)
 
 | # | Decision | Choice |
@@ -160,6 +163,7 @@ commands/
 | 12 | Codex port | Separate `codex/` bundle; core skills symlinked (no drift); commands → Codex skills; root `AGENTS.md` dogfood config; CC untouched; command skills + manifests hand-synced |
 | 13 | Canon lint | Read-only `scripts/lint-canon.py` + `/stories-lint`; dev/CI tool, not shipped runtime (skill-only invariant holds); lint diagnoses, refresh treats |
 | 14 | Activation | Dormant by default — active only where `docs/stories/` exists; suggest init at most once, never force |
+| 15 | Systems layer | Canon kind `system` under `docs/stories/systems/` + model-derived root `BLOCK_DIAGRAM.md`; legend = guaranteed click; lint enforces coverage. Full decisions: `2026-07-01-systems-layer-design.md` §9 |
 
 ## 10. Risks & notes
 
