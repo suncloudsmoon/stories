@@ -34,7 +34,7 @@ COMMAND_PAIRS = [
 ]
 MANIFESTS = (".claude-plugin/plugin.json", "codex/.codex-plugin/plugin.json")
 MANIFEST_FIELDS = ["name", "version", "description", "keywords"]
-CODE_KINDS = {"saga", "vignette"}
+CODE_KINDS = {"saga", "vignette", "system"}
 
 errors, warns, infos = [], [], []
 
@@ -153,6 +153,49 @@ if IS_PLUGIN_REPO:
             errors.append(f"missing Codex skill: {cx}")
         elif step_titles(read(cc)) != step_titles(read(cx)):
             warns.append(f"command drift: {cc} and {cx} have different step structure")
+
+# ---- systems layer: BLOCK_DIAGRAM.md <-> docs/stories/systems/ ----
+BLOCK_FILE = ROOT / "BLOCK_DIAGRAM.md"
+MARKER = "derived by the stories plugin"
+SKIP_DIRS = {"docs", "node_modules", "vendor", "dist", "build", "target"}
+MERMAID_KEYWORDS = {"flowchart", "graph", "subgraph", "end", "classDef", "class", "click", "style", "direction"}
+sys_dir = STORIES / "systems"
+system_pages = sorted(sys_dir.glob("*.md")) if sys_dir.is_dir() else []
+
+if system_pages and not BLOCK_FILE.exists():
+    errors.append("systems: pages exist under docs/stories/systems/ but BLOCK_DIAGRAM.md missing at repo root")
+
+if BLOCK_FILE.exists():
+    body = BLOCK_FILE.read_text(encoding="utf-8")
+    if MARKER not in body:
+        warns.append("BLOCK_DIAGRAM.md: no derived-by marker — hand-written? never overwrite it")
+    linked = set(re.findall(r"\(docs/stories/systems/([\w-]+)\.md\)", body))
+    for p in system_pages:
+        if p.stem not in linked:
+            errors.append(f"BLOCK_DIAGRAM.md: system page '{p.stem}' not linked from the legend")
+    for slug in sorted(linked):
+        if not (sys_dir / f"{slug}.md").exists():
+            errors.append(f"BLOCK_DIAGRAM.md: legend links missing page docs/stories/systems/{slug}.md")
+    blocks = re.findall(r"```mermaid\n(.*?)```", body, re.S)
+    if blocks:
+        ids = {i for i in re.findall(r"^\s*([A-Za-z]\w*)\s*[\[(]", blocks[0], re.M)
+               if i not in MERMAID_KEYWORDS}
+        legend_ids = {s.replace("-", "_") for s in linked}
+        for i in sorted(ids - legend_ids):
+            warns.append(f"BLOCK_DIAGRAM.md: diagram node '{i}' has no legend link")
+
+if system_pages:
+    sys_cover_roots = set()
+    for p in system_pages:
+        fmp = frontmatter(p.read_text(encoding="utf-8")) or ""
+        for g in fm_list(fmp, "covers"):
+            root_seg = g.split("/")[0]
+            if root_seg and "*" not in root_seg:
+                sys_cover_roots.add(root_seg)
+    for d in sorted(ROOT.iterdir()):
+        if (d.is_dir() and not d.name.startswith(".")
+                and d.name not in SKIP_DIRS and d.name not in sys_cover_roots):
+            warns.append(f"systems: top-level dir '{d.name}/' not covered by any system page")
 
 # ---- coverage gap (INFO) ----
 covered = set()
