@@ -17,6 +17,8 @@ For each `saga`/`vignette`, check its `covers:` paths still exist and that the s
 
 For each `library` page, check `sources:` and links are still valid.
 
+For each `system` page, walk the code it covers: blocks appeared, vanished, or reshaped → update the page, then re-derive `BLOCK_DIAGRAM.md` (diagram, legend, `New since` section — age out entries older than ~14 days). Verify everything in the program is still accounted for — a segment with no block is a gap to fill; if the repo has no systems layer yet, offer to build one, once.
+
 ## 3. Prune
 Delete orphans and dead canon **confidently** — stale canon is worse than none. Merge duplicates. Only pause to ask if a page might carry standalone value the code doesn't capture (a discretionary MAY-ask). Flag contradictions between pages; resolve the clear ones, surface the rest.
 
@@ -25,4 +27,4 @@ Delete orphans and dead canon **confidently** — stale canon is worse than none
 - Find code with real soul that has no covering story, and write one.
 
 ## 5. Rebuild & log
-Regenerate `index.md` from what now exists. Append `## [<today>] refresh | <summary>` to `log.md`, noting what was rewritten, deleted, and added. Report the changes in plain terms.
+Regenerate `index.md` from what now exists (systems pages under `## Systems`). Append `## [<today>] refresh | <summary>` to `log.md`, noting what was rewritten, deleted, and added. Report the changes in plain terms.

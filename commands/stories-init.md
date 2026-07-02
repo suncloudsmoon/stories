@@ -12,7 +12,7 @@ Create, using today's real date (YYYY-MM-DD):
 - `docs/stories/index.md` — the Atlas. A heading plus empty sections: `## Origin`, `## Sagas`, `## Vignettes`, `## Library`.
 - `docs/stories/log.md` — the chronicle: `# Log` then the first entry `## [<today>] init | canon bootstrapped`.
 - `docs/stories/origin.md` — the origin saga (written in step 4).
-- empty dirs `docs/stories/sagas/`, `docs/stories/vignettes/`, `docs/stories/library/`, each with a `.gitkeep`.
+- empty dirs `docs/stories/sagas/`, `docs/stories/vignettes/`, `docs/stories/systems/`, `docs/stories/library/`, each with a `.gitkeep`.
 
 ## 3. Interview the maker
 Read the `stories` and `writing-a-story` skills first. Then, to source the soul of `origin.md`, ask the user — one question at a time — about:
@@ -26,5 +26,8 @@ First pull anything already on record (README, existing docs, recent commits, th
 ## 4. Write the origin saga
 Write `docs/stories/origin.md` to the craft bar (`writing-a-story`): kind `origin`, the light spine, grounded, tight, with soul. Weave the maker's preferences in as lore.
 
-## 5. Wire it up
-Add `origin.md` to the Atlas under `## Origin` with a one-line hook. Append a log entry. Report the tree you created.
+## 5. Map the systems
+Scan the repo and choose its real segments — frontend/backend, pipeline stages, packages; your call, at block granularity. For each, author `docs/stories/systems/<segment>.md` (kind `system`, `covers:` globs, plain-language lead — per the systems-layer rules in the `stories` skill and the craft bar in `writing-a-story`). Then derive the root `BLOCK_DIAGRAM.md`: plain summary, top-level Mermaid flowchart, legend table linking every block to its page, `## New since <today>` section, derived-by marker. Everything in the program accounted for. A tiny repo may take the root file alone (grow pages later). If a hand-written `BLOCK_DIAGRAM.md`/`ARCHITECTURE.md` already exists (no marker), do not touch it — surface it instead.
+
+## 6. Wire it up
+Add `origin.md` to the Atlas under `## Origin`, and each systems page under `## Systems`, with one-line hooks. Append a log entry. Report the tree you created.
