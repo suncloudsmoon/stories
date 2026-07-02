@@ -19,3 +19,6 @@ Added the read-only health-check — `scripts/lint-canon.py` + `/stories-lint` (
 
 ## [2026-07-01] feat | systems layer (the shape-map)
 Shape joined the canon: new kind `system`, `docs/stories/systems/` pages + derived root `BLOCK_DIAGRAM.md` (legend as the guaranteed click, `new` highlights, 14-day aging). Discipline + craft skills extended, init/refresh/lint updated in both homes, manifests to 0.3.0. Filed [[the-map]]; carved the auto-doc decree in [[origin]]; dogfooded the map onto this repo (four blocks). Spec: `docs/specs/2026-07-01-systems-layer-design.md`.
+
+## [2026-07-01] refactor | shape-map face renamed to ARCHITECTURE.md
+The maker chose the community convention (matklad's ARCHITECTURE.md pattern) over the working name BLOCK_DIAGRAM.md. Renamed the root face + every living reference (skills, commands both homes, lint, README, CLAUDE.md, manifests, specs, [[the-map]], the Atlas); plan doc and earlier log entries keep the old name as history.

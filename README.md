@@ -24,7 +24,7 @@ Restart Claude Code to load it. The plugin stays **dormant** until a repo has `d
 - **Low friction.** Reading never interrupts you. The model proceeds on judgment and stops to ask only on a real conflict — or when something genuinely warrants your attention.
 - **Auto-author.** After a gated change, the model rewrites the affected stories in the same session.
 - **Deep research auto-files.** A deep-research run lands as a `research` page in the library, cross-linked into the graph.
-- **Shape-map.** Alongside the why, the plugin keeps the *shape*: `BLOCK_DIAGRAM.md` at the repo root — a plain-language block diagram of how the app is put together, every block linked (legend table) to a `docs/stories/systems/` page (`kind: system`, gated like sagas), recently added blocks highlighted. Derived from the systems pages by the model; updated as part of the same read-then-rewrite discipline.
+- **Shape-map.** Alongside the why, the plugin keeps the *shape*: `ARCHITECTURE.md` at the repo root — a plain-language block diagram of how the app is put together, every block linked (legend table) to a `docs/stories/systems/` page (`kind: system`, gated like sagas), recently added blocks highlighted. Derived from the systems pages by the model; updated as part of the same read-then-rewrite discipline.
 
 ## Layout
 
@@ -39,7 +39,7 @@ docs/stories/
   library/      # deep research, syntheses, sources, concepts
 ```
 
-Plus `BLOCK_DIAGRAM.md` at the repo root — the shape-map's plain-language face.
+Plus `ARCHITECTURE.md` at the repo root — the shape-map's plain-language face.
 
 ## Commands
 

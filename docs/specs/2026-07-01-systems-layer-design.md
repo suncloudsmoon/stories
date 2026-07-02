@@ -1,4 +1,4 @@
-# Design Spec — the systems layer (`BLOCK_DIAGRAM.md` + `kind: system`)
+# Design Spec — the systems layer (`ARCHITECTURE.md` + `kind: system`)
 
 **Date:** 2026-07-01
 **Status:** Draft, pending user review
@@ -27,20 +27,20 @@ Complementary, cross-linked: a system page says *what the Auth segment is and to
 One graph holds (base decision #9). System pages are canon pages:
 
 ```
-BLOCK_DIAGRAM.md              # repo root — the face (derived view)
+ARCHITECTURE.md              # repo root — the face (derived view)
 docs/stories/
   systems/                    # NEW realm — kind: system
     <segment>.md              # one per top-level block
 ```
 
 - **`docs/stories/systems/<segment>.md`** — source of truth. One per block. Frontmatter `kind: system`, `covers:` globs for the code it maps, `links:` to the sagas that carry its why and to sibling systems.
-- **`BLOCK_DIAGRAM.md`** (repo root) — the human face, **derived from the systems pages by the model** (never a script; skill-only invariant). Root placement is deliberate: "understood by everyone" requires being findable by everyone.
+- **`ARCHITECTURE.md`** (repo root) — the human face, **derived from the systems pages by the model** (never a script; skill-only invariant). Root placement is deliberate: "understood by everyone" requires being findable by everyone.
 - **Rejected:** separate `docs/systems/` tree — contradicts the one-graph saga (a second wiki bolted alongside; severs why↔what links). Also rejected: canon-only with no root file — kills discoverability for non-developers.
-- **Naming — open question:** `BLOCK_DIAGRAM.md` per the maker's notes. Community convention is `ARCHITECTURE.md` (matklad's pattern; readers and tools already look for it). Confirm or rename before implementation.
+- **Naming — resolved (2026-07-01):** shipped as `BLOCK_DIAGRAM.md` per the maker's notes, renamed to `ARCHITECTURE.md` the same day at the maker's call — the community convention (matklad's pattern; readers and tools already look for it) won.
 
 ## 4. Page anatomy
 
-### 4.1 `BLOCK_DIAGRAM.md` (root)
+### 4.1 `ARCHITECTURE.md` (root)
 
 1. One-paragraph plain-language summary of what the app is. Top level is 99% plaintext by decree; jargon lives one link down.
 2. Top-level Mermaid `flowchart` — segments as blocks. Segmentation is the model's call (frontend/backend, pipeline stages, packages — whatever the repo's true shape is).
@@ -65,19 +65,19 @@ New row in the kinds table:
 | `system` | init, refresh, structural change (auto) | **YES** (`covers:`) | legible + complete; plain lead; exhaustive within its block |
 
 - **Read gate:** the gate-line is unchanged; the covering set found via Atlas + `covers:` now naturally includes system pages, so before reshaping structure the model reads the shape-map too.
-- **Write side (§3.3 of base spec) extends:** update every story whose soul shifted **and every system page whose shape shifted**, and re-derive `BLOCK_DIAGRAM.md` when the top-level picture moved.
+- **Write side (§3.3 of base spec) extends:** update every story whose soul shifted **and every system page whose shape shifted**, and re-derive `ARCHITECTURE.md` when the top-level picture moved.
 - **Origin-decree carve-out:** origin.md's "never become a verbose auto-doc that restates the code" gains a clause — *system pages restate **shape**, at block granularity, and that is their job; the moment one reads like a directory listing it has failed its bar.* Updating origin.md is a soul change and gets storied.
 
 ## 6. Lifecycle
 
-- **`/stories-init`** — after the interview: scan the repo, choose segments, author all systems pages + root `BLOCK_DIAGRAM.md`. Everything accounted for from day one.
+- **`/stories-init`** — after the interview: scan the repo, choose segments, author all systems pages + root `ARCHITECTURE.md`. Everything accounted for from day one.
 - **Ambient (the gate's write side)** — structural change ⇒ affected systems pages updated in the same session; root file re-derived when the top-level picture changes; new segment ⇒ new page + `new` styling + log entry.
 - **`/stories-refresh`** — reconcile diagram vs reality (walk the repo's real top-level structure ↔ blocks), rewrite stale pages, delete dead blocks without fear, age out `new` highlights, rebuild legend + Atlas. Repos initialized before this feature: refresh offers to build the layer once; never forces it.
-- **`/stories-lint` / `scripts/lint-canon.py`** — mechanical checks: every diagram node ↔ a systems page ↔ a legend row; `systems/` pages ⇒ `BLOCK_DIAGRAM.md` exists (a root file *without* `systems/` is valid — tiny-repo mode, §7); union of system `covers:` vs top-level code dirs (coverage **warning**); consumer-aware skip when no systems layer exists (dormancy, base decision #14, holds).
+- **`/stories-lint` / `scripts/lint-canon.py`** — mechanical checks: every diagram node ↔ a systems page ↔ a legend row; `systems/` pages ⇒ `ARCHITECTURE.md` exists (a root file *without* `systems/` is valid — tiny-repo mode, §7); union of system `covers:` vs top-level code dirs (coverage **warning**); consumer-aware skip when no systems layer exists (dormancy, base decision #14, holds).
 
 ## 7. Edge cases
 
-- Pre-existing hand-written `BLOCK_DIAGRAM.md`/`ARCHITECTURE.md` not made by the plugin: **never overwrite** — surface via the conflict channel.
+- Pre-existing hand-written `ARCHITECTURE.md` not made by the plugin: **never overwrite** — surface via the conflict channel.
 - Tiny repo: root file only; no `systems/` pages until a segment earns one (mirrors the vignette discipline).
 - Renderer without Mermaid: plain summary + legend still carry the full content.
 - Monorepo: segments = packages/apps at root altitude; layers within each package's own page.
@@ -90,13 +90,13 @@ New row in the kinds table:
 - `scripts/lint-canon.py` — §6 checks.
 - `README.md` + base spec §9 — contract restated (three-places rule).
 - `codex/` — core skills carry via symlink; command-skills + manifests hand-synced.
-- **Dogfood:** this repo gets its own `BLOCK_DIAGRAM.md` + systems pages (segments ≈ skills / commands / codex / scripts) + a new saga (`the-map`) carrying this decision + the origin.md carve-out + Atlas/log updates.
+- **Dogfood:** this repo gets its own `ARCHITECTURE.md` + systems pages (segments ≈ skills / commands / codex / scripts) + a new saga (`the-map`) carrying this decision + the origin.md carve-out + Atlas/log updates.
 
 ## 9. Decisions (this spec)
 
 | # | Decision | Choice |
 |---|---|---|
-| S1 | Placement | Canon kind `system` under `docs/stories/systems/` + root `BLOCK_DIAGRAM.md` face (one-graph holds) |
+| S1 | Placement | Canon kind `system` under `docs/stories/systems/` + root `ARCHITECTURE.md` face (one-graph holds) |
 | S2 | Source of truth | systems pages; root file is a model-derived view |
 | S3 | Gate | system pages carry `covers:`; gated read+write like sagas |
 | S4 | Bar | legible + complete, plain lead — not full soul; block granularity, never per-file |
@@ -110,4 +110,4 @@ New row in the kinds table:
 - **Churn:** structural changes now touch two artifacts. Mitigated by block granularity and re-deriving the root file only when the top-level picture moves.
 - **Auto-doc creep:** guarded by S4, the origin carve-out language, and refresh pruning.
 - **Best-effort staleness:** same trade as the-gate; lint's coverage warning is the tripwire.
-- **Open:** root-file name (`BLOCK_DIAGRAM.md` vs `ARCHITECTURE.md`, §3); the 14-day recency window default (S6).
+- **Open:** the 14-day recency window default (S6). *(Root-file name resolved — `ARCHITECTURE.md`, §3.)*

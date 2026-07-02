@@ -5,7 +5,7 @@ description: Health-check the stories canon (read-only) — run the linter, add 
 Diagnose the health of the stories wiki. Read-only — diagnose, don't rewrite (that's `/stories-refresh`).
 
 ## 1. Run the engine
-Run `python3 scripts/lint-canon.py`. It checks broken `[[links]]`, dead `covers:` and `path:line` citations, manifest drift, command drift (Claude Code ↔ Codex), staleness (git), coverage gaps, and the systems layer (BLOCK_DIAGRAM.md ↔ systems pages ↔ legend, top-level coverage). It exits non-zero on errors.
+Run `python3 scripts/lint-canon.py`. It checks broken `[[links]]`, dead `covers:` and `path:line` citations, manifest drift, command drift (Claude Code ↔ Codex), staleness (git), coverage gaps, and the systems layer (ARCHITECTURE.md ↔ systems pages ↔ legend, top-level coverage). It exits non-zero on errors.
 
 ## 2. Read what it flagged
 Open each named page or file. The engine is mechanical — confirm a finding is real before acting on it.

@@ -1,4 +1,4 @@
-# Block diagram — the `stories` plugin
+# Architecture — the `stories` plugin
 
 This repo is a **plugin** that keeps a living, story-shaped wiki of any codebase it's installed into. There is no application code here — the product is a set of markdown rule-files ("skills"), shipped into two AI coding tools (Claude Code and Codex), plus one small health-check script. The map below shows the four parts and how they depend on each other.
 

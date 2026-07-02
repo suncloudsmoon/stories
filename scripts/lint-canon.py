@@ -154,35 +154,35 @@ if IS_PLUGIN_REPO:
         elif step_titles(read(cc)) != step_titles(read(cx)):
             warns.append(f"command drift: {cc} and {cx} have different step structure")
 
-# ---- systems layer: BLOCK_DIAGRAM.md <-> docs/stories/systems/ ----
-BLOCK_FILE = ROOT / "BLOCK_DIAGRAM.md"
+# ---- systems layer: ARCHITECTURE.md <-> docs/stories/systems/ ----
+ARCH_FILE = ROOT / "ARCHITECTURE.md"
 MARKER = "derived by the stories plugin"
 SKIP_DIRS = {"docs", "node_modules", "vendor", "dist", "build", "target"}
 MERMAID_KEYWORDS = {"flowchart", "graph", "subgraph", "end", "classDef", "class", "click", "style", "direction"}
 sys_dir = STORIES / "systems"
 system_pages = sorted(sys_dir.glob("*.md")) if sys_dir.is_dir() else []
 
-if system_pages and not BLOCK_FILE.exists():
-    errors.append("systems: pages exist under docs/stories/systems/ but BLOCK_DIAGRAM.md missing at repo root")
+if system_pages and not ARCH_FILE.exists():
+    errors.append("systems: pages exist under docs/stories/systems/ but ARCHITECTURE.md missing at repo root")
 
-if BLOCK_FILE.exists():
-    body = BLOCK_FILE.read_text(encoding="utf-8")
+if ARCH_FILE.exists():
+    body = ARCH_FILE.read_text(encoding="utf-8")
     if MARKER not in body:
-        warns.append("BLOCK_DIAGRAM.md: no derived-by marker — hand-written? never overwrite it")
+        warns.append("ARCHITECTURE.md: no derived-by marker — hand-written? never overwrite it")
     linked = set(re.findall(r"\(docs/stories/systems/([\w-]+)\.md\)", body))
     for p in system_pages:
         if p.stem not in linked:
-            errors.append(f"BLOCK_DIAGRAM.md: system page '{p.stem}' not linked from the legend")
+            errors.append(f"ARCHITECTURE.md: system page '{p.stem}' not linked from the legend")
     for slug in sorted(linked):
         if not (sys_dir / f"{slug}.md").exists():
-            errors.append(f"BLOCK_DIAGRAM.md: legend links missing page docs/stories/systems/{slug}.md")
+            errors.append(f"ARCHITECTURE.md: legend links missing page docs/stories/systems/{slug}.md")
     blocks = re.findall(r"```mermaid\n(.*?)```", body, re.S)
     if blocks:
         ids = {i for i in re.findall(r"^\s*([A-Za-z]\w*)\s*[\[(]", blocks[0], re.M)
                if i not in MERMAID_KEYWORDS}
         legend_ids = {s.replace("-", "_") for s in linked}
         for i in sorted(ids - legend_ids):
-            warns.append(f"BLOCK_DIAGRAM.md: diagram node '{i}' has no legend link")
+            warns.append(f"ARCHITECTURE.md: diagram node '{i}' has no legend link")
 
 if system_pages:
     sys_cover_roots = set()
