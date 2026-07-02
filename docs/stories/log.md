@@ -16,3 +16,6 @@ Shipped the Codex bundle (`codex/`: `.codex-plugin` manifest, symlinked core ski
 
 ## [2026-06-14] feat | canon lint + dormant-by-default
 Added the read-only health-check — `scripts/lint-canon.py` + `/stories-lint` (and the Codex mirror) — filed [[the-lint]]. It checks links, covers, citations, manifest + command drift, git-staleness, and coverage, making silent drift visible and enforcing the two-homes sync mechanically. Also made the discipline **dormant by default**: no `docs/stories/` ⇒ stay quiet, suggest init at most once. The new command pair brings the hand-synced set to four; manifests bumped to 0.2.0.
+
+## [2026-07-01] feat | systems layer (the shape-map)
+Shape joined the canon: new kind `system`, `docs/stories/systems/` pages + derived root `BLOCK_DIAGRAM.md` (legend as the guaranteed click, `new` highlights, 14-day aging). Discipline + craft skills extended, init/refresh/lint updated in both homes, manifests to 0.3.0. Filed [[the-map]]; carved the auto-doc decree in [[origin]]; dogfooded the map onto this repo (four blocks). Spec: `docs/specs/2026-07-01-systems-layer-design.md`.

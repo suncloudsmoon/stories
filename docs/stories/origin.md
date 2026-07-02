@@ -1,8 +1,8 @@
 ---
 title: Why stories exists
 kind: origin
-links: ["[[the-gate]]", "[[one-graph]]", "[[the-craft]]"]
-refreshed: 2026-06-14
+links: ["[[the-gate]]", "[[one-graph]]", "[[the-craft]]", "[[the-map]]"]
+refreshed: 2026-07-01
 ---
 
 # Why `stories` exists
@@ -20,7 +20,7 @@ refreshed: 2026-06-14
 - *One graph.* Code-soul and knowledge (research, sources, concepts) live in the same interlinked web, so a finding can point at the code it shaped.
 - *Grounded, with room for myth.* Rooted in real code and cited; a mythic frame is allowed only when it makes a hard idea land.
 
-**What it must never become.** A changelog. A verbose auto-doc that restates the code. A nagging gate that interrupts. A place where the model invents soul it was never told.
+**What it must never become.** A changelog. A verbose auto-doc that restates the code — the shape-map ([[the-map]]) restates *shape* at block granularity, and that is its job; the moment it reads like a directory listing, it too has failed. A nagging gate that interrupts. A place where the model invents soul it was never told.
 
 **What success looks like.** Someone — a teammate, or a future model with no memory of today — opens `docs/stories/`, reads for five minutes, and *understands* this project: not just how it's wired, but what it values and what would break its heart. And the canon is still true, because keeping it true cost almost nothing.
 

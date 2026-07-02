@@ -3,7 +3,7 @@ title: The Gate, and Why It's a Skill
 kind: saga
 covers: ["skills/stories/SKILL.md"]
 links: ["[[origin]]", "[[one-graph]]", "[[the-craft]]", "[[codex-conventions]]", "[[the-lint]]"]
-refreshed: 2026-06-14
+refreshed: 2026-07-01
 ---
 
 # The Gate, and Why It's a Skill

@@ -3,7 +3,7 @@ title: The Craft — Why a Spine, Not a Template
 kind: saga
 covers: ["skills/writing-a-story/SKILL.md"]
 links: ["[[origin]]", "[[the-gate]]", "[[one-graph]]"]
-refreshed: 2026-06-14
+refreshed: 2026-07-01
 ---
 
 # The Craft — Why a Spine, Not a Template
