@@ -28,6 +28,8 @@ Not a template (templates kill art), not freeform (freeform drifts). A spine you
 
 A short vignette may collapse steps 1–2 and 4 into a few sentences. An origin saga may dwell. Bend the spine; don't pad it.
 
+A `system` page swaps the spine for the **shape**: plain-language lead → diagram (if inner structure earns one) → the parts, cited → boundaries → links onward. Its art is legibility, not narrative — but the last line of its lead should still say *why this segment exists at all*, in one sentence, linking the saga that carries the full why.
+
 ## The quality bar
 
 - **One meaning per story.** A clear soul, not a grab-bag. If it sprawls, split it.
@@ -42,6 +44,7 @@ A short vignette may collapse steps 1–2 and 4 into a few sentences. An origin 
 | kind | how hard to craft |
 |---|---|
 | `origin`, `saga`, `vignette` | full soul — the spine, the why, the art |
+| `system` | legible + complete — plain lead, exhaustive within its block, block granularity (never per-file); shape, not soul |
 | `research`, `concept` | full soul — synthesis with citations to `sources:` |
 | `source` | faithful + tight — capture the source honestly; do not dress it up |
 | `reference` | a pointer — title, link, one line. No story. |
