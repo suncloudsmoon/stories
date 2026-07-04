@@ -3,14 +3,18 @@
   "name": "suncloudsmoon",
   "description": "A soul-bearing wiki for your codebase — read the stories before non-trivial changes, rewrite them after. Doubles as a knowledge wiki for deep research.",
   "owner": {
-    "name": "suncloudsmoon"
+    "name": "suncloudsmoon",
+    "url": "https://github.com/suncloudsmoon"
   },
   "plugins": [
     {
       "name": "stories",
       "description": "A soul-bearing wiki for your codebase. Capture the why, not the what: a read-before-change gate, auto-authoring, and deep-research auto-filing. Dormant until docs/stories/ exists.",
       "source": "./",
-      "category": "productivity"
+      "category": "productivity",
+      "homepage": "https://github.com/suncloudsmoon/stories",
+      "license": "MIT",
+      "keywords": ["documentation", "wiki", "stories", "knowledge-base", "soul"]
     }
   ]
 }

@@ -22,3 +22,6 @@ Shape joined the canon: new kind `system`, `docs/stories/systems/` pages + deriv
 
 ## [2026-07-01] refactor | shape-map face renamed to ARCHITECTURE.md
 The maker chose the community convention (matklad's ARCHITECTURE.md pattern) over the working name BLOCK_DIAGRAM.md. Renamed the root face + every living reference (skills, commands both homes, lint, README, CLAUDE.md, manifests, specs, [[the-map]], the Atlas); plan doc and earlier log entries keep the old name as history.
+
+## [2026-07-03] chore | publication packaging (v1.0.0)
+Made both homes publishable: added an MIT `LICENSE`, and `license` / `homepage` / `repository` to both manifests and the marketplace entry. Filled the `<owner>` placeholders with the real slug (`suncloudsmoon/stories`) across the READMEs and marketplace, and wired a GitHub Actions workflow (`.github/workflows/lint.yml`) that runs the linter on every push/PR. Version → 1.0.0. Packaging only — no soul or behavior change, so per [[origin]] ("never a changelog") this stays a log line, not a saga. Also added `CHANGELOG.md`, README badges, and a hero diagram (`docs/assets/hero.svg`) for the listing. The public `git push` and `claude plugin marketplace add suncloudsmoon/stories` remain the maker's to run.

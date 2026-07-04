@@ -3,7 +3,7 @@ title: Codex home — the mirrored bundle
 kind: system
 covers: ["codex/**", "AGENTS.md"]
 links: ["[[codex-port]]", "[[the-map]]"]
-refreshed: 2026-07-01
+refreshed: 2026-07-03
 ---
 
 # Codex home

@@ -3,7 +3,7 @@ title: The Codex Port — One Soul, Two Homes
 kind: saga
 covers: ["codex/**", "AGENTS.md"]
 links: ["[[origin]]", "[[the-gate]]", "[[codex-conventions]]", "[[the-lint]]"]
-refreshed: 2026-07-01
+refreshed: 2026-07-03
 ---
 
 # The Codex Port — One Soul, Two Homes

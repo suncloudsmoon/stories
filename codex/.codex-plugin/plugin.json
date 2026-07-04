@@ -1,10 +1,14 @@
 {
   "name": "stories",
-  "version": "0.3.0",
+  "version": "1.0.0",
   "description": "A soul-bearing wiki for your codebase. The model reads the relevant stories before any non-trivial change and rewrites them after — capturing the why, not the what. Doubles as a general knowledge wiki, and keeps a block-diagram shape-map (ARCHITECTURE.md) of how the app is put together.",
   "author": {
-    "name": "suncloudsmoon"
+    "name": "suncloudsmoon",
+    "url": "https://github.com/suncloudsmoon"
   },
+  "homepage": "https://github.com/suncloudsmoon/stories",
+  "repository": "https://github.com/suncloudsmoon/stories",
+  "license": "MIT",
   "keywords": ["documentation", "wiki", "stories", "knowledge-base", "soul"],
   "skills": "./skills/",
   "interface": {

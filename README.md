@@ -1,5 +1,12 @@
 # stories
 
+[![CI](https://github.com/suncloudsmoon/stories/actions/workflows/lint.yml/badge.svg)](https://github.com/suncloudsmoon/stories/actions/workflows/lint.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+![Version](https://img.shields.io/badge/version-1.0.0-2ea44f)
+![Claude Code plugin](https://img.shields.io/badge/Claude%20Code-plugin-8A2BE2)
+
+![stories — read the covering stories, change the code, rewrite them; all in the same session](docs/assets/hero.svg)
+
 A Claude Code plugin that maintains a **soul-bearing wiki** of your codebase under `docs/stories/`.
 
 Most docs describe *what* the code does. Stories capture the ***why*** — the tension a decision resolved, the road not taken, what the maker cares about. The model reads the relevant stories before any non-trivial change and rewrites them after, so the canon stays true as the code moves. The same wiki doubles as a general knowledge base for deep-research results, syntheses, and sources — one interlinked graph where research links to the code it shaped.
@@ -9,10 +16,11 @@ It's a storytelling take on the LLM-wiki pattern — an LLM-maintained, compound
 ## Install (Claude Code)
 
 ```bash
-# from a local clone of this repo:
-claude plugin marketplace add /path/to/stories   # registers marketplace "suncloudsmoon"
+claude plugin marketplace add suncloudsmoon/stories   # registers marketplace "suncloudsmoon"
 claude plugin install stories@suncloudsmoon
-# once published, instead:  claude plugin marketplace add <owner>/stories
+
+# or from a local clone, before it's published:
+#   claude plugin marketplace add /path/to/stories
 ```
 
 Restart Claude Code to load it. The plugin stays **dormant** until a repo has `docs/stories/` — run `/stories-init` there to create one.
@@ -59,3 +67,7 @@ A Codex plugin bundle lives in `codex/` — `.codex-plugin/` plus skills, with t
 ## Design
 
 See `docs/specs/2026-06-14-stories-plugin-design.md` for the full design and the decisions behind it.
+
+## License
+
+MIT — see [`LICENSE`](LICENSE). Copyright © 2026 suncloudsmoon.

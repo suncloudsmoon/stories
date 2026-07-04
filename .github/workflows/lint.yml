@@ -1,0 +1,23 @@
+name: lint-canon
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # full history so lint-canon's git-staleness check is meaningful
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Manifests parse
+        run: |
+          python3 -c "import json; json.load(open('.claude-plugin/plugin.json'))"
+          python3 -c "import json; json.load(open('.claude-plugin/marketplace.json'))"
+          python3 -c "import json; json.load(open('codex/.codex-plugin/plugin.json'))"
+      - name: Canon health-check
+        run: python3 scripts/lint-canon.py

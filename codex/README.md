@@ -13,12 +13,12 @@ The Codex plugin packaging of **stories**. The Claude Code version lives at the 
 Codex distributes plugins through a marketplace. Once this repo is pushed:
 
 ```bash
-codex plugin marketplace add <owner>/<repo>
+codex plugin marketplace add suncloudsmoon/stories
 # then browse/enable installed plugins:
 /plugins
 ```
 
-To register via a marketplace file, add an entry pointing at this bundle with a git-subdir source and path `./codex`. Example (replace `<owner>/<repo>`):
+To register via a marketplace file, add an entry pointing at this bundle with a git-subdir source and path `./codex`:
 
 ```json
 {
@@ -26,7 +26,7 @@ To register via a marketplace file, add an entry pointing at this bundle with a 
   "plugins": [
     {
       "name": "stories",
-      "source": { "source": "git-subdir", "url": "https://github.com/<owner>/<repo>.git", "path": "./codex", "ref": "main" },
+      "source": { "source": "git-subdir", "url": "https://github.com/suncloudsmoon/stories.git", "path": "./codex", "ref": "main" },
       "policy": { "installation": "AVAILABLE", "authentication": "ON_INSTALL" },
       "category": "Productivity"
     }
@@ -34,7 +34,7 @@ To register via a marketplace file, add an entry pointing at this bundle with a 
 }
 ```
 
-(Not committed as a live file — it needs the real repo URL. The local-source form requires the bundle to sit inside the marketplace root, which a repo-root `codex/` does not, so git-subdir is the right shape here.)
+(Kept inline rather than as a committed live marketplace file: the local-source form requires the bundle to sit inside the marketplace root, which a repo-root `codex/` does not, so the git-subdir form above is the right shape — copy it into your marketplace once the repo is pushed.)
 
 ## Keeping in sync
 

@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 400" role="img" aria-label="stories: read the covering stories, change the code, rewrite the stories — all in the same session">
+  <title>stories — read the covering stories, change the code, rewrite them; all in the same session</title>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#151935"/>
+      <stop offset="1" stop-color="#0d1022"/>
+    </linearGradient>
+    <marker id="fwd" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#6b73a8"/>
+    </marker>
+    <marker id="ret" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#e6b566"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="900" height="400" rx="18" fill="url(#bg)"/>
+  <rect x="0.5" y="0.5" width="899" height="399" rx="18" fill="none" stroke="#2a2f52" stroke-width="1"/>
+
+  <!-- wordmark + tagline -->
+  <text x="56" y="86" font-family="Georgia, 'Times New Roman', serif" font-style="italic" font-size="52" fill="#f4f1e8">stories</text>
+  <text x="58" y="118" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif" font-size="16" fill="#9aa0c7">capture the <tspan fill="#e6b566" font-style="italic">why</tspan>, not the what</text>
+
+  <!-- step 1: read -->
+  <rect x="56" y="170" width="208" height="88" rx="16" fill="#1b2044" stroke="#e6b566" stroke-width="1.5"/>
+  <circle cx="88" cy="214" r="15" fill="#e6b566"/>
+  <text x="88" y="220" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif" font-size="17" font-weight="700" fill="#151935">1</text>
+  <text x="114" y="208" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif" font-size="22" font-weight="700" fill="#f4f1e8">Read</text>
+  <text x="114" y="232" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif" font-size="13" fill="#9aa0c7">the covering stories</text>
+
+  <!-- step 2: change -->
+  <rect x="346" y="170" width="208" height="88" rx="16" fill="#1b2044" stroke="#5eead4" stroke-width="1.5"/>
+  <circle cx="378" cy="214" r="15" fill="#5eead4"/>
+  <text x="378" y="220" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif" font-size="17" font-weight="700" fill="#0d1022">2</text>
+  <text x="404" y="208" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif" font-size="22" font-weight="700" fill="#f4f1e8">Change</text>
+  <text x="404" y="232" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif" font-size="13" fill="#9aa0c7">the code</text>
+
+  <!-- step 3: rewrite -->
+  <rect x="636" y="170" width="208" height="88" rx="16" fill="#1b2044" stroke="#e6b566" stroke-width="1.5"/>
+  <circle cx="668" cy="214" r="15" fill="#e6b566"/>
+  <text x="668" y="220" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif" font-size="17" font-weight="700" fill="#151935">3</text>
+  <text x="694" y="208" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif" font-size="22" font-weight="700" fill="#f4f1e8">Rewrite</text>
+  <text x="694" y="232" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif" font-size="13" fill="#9aa0c7">the stories</text>
+
+  <!-- forward arrows -->
+  <line x1="272" y1="214" x2="338" y2="214" stroke="#6b73a8" stroke-width="3" marker-end="url(#fwd)"/>
+  <line x1="562" y1="214" x2="628" y2="214" stroke="#6b73a8" stroke-width="3" marker-end="url(#fwd)"/>
+
+  <!-- return arrow (same session) -->
+  <path d="M 740 258 L 740 300 L 160 300 L 160 260" fill="none" stroke="#e6b566" stroke-width="2.5" stroke-dasharray="2 6" stroke-linecap="round" marker-end="url(#ret)"/>
+  <text x="450" y="322" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif" font-style="italic" font-size="13" fill="#e6b566">…all in the same session — reading never interrupts you</text>
+
+  <!-- footer: the canon -->
+  <text x="450" y="374" text-anchor="middle" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace" font-size="12" fill="#6b73a8">docs/stories/ — origin · sagas · systems · library      +      ARCHITECTURE.md</text>
+</svg>

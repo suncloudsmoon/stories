@@ -3,7 +3,7 @@ title: The Map — Shape Joins the Canon
 kind: saga
 covers: ["ARCHITECTURE.md", "docs/stories/systems/*.md"]
 links: ["[[origin]]", "[[one-graph]]", "[[the-gate]]", "[[the-lint]]", "[[the-craft]]", "[[core-skills]]", "[[claude-code-home]]", "[[codex-home]]", "[[canon-tooling]]"]
-refreshed: 2026-07-01
+refreshed: 2026-07-03
 ---
 
 # The Map — Shape Joins the Canon
