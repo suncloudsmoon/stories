@@ -16,7 +16,7 @@ It's a storytelling take on the LLM-wiki pattern — an LLM-maintained, compound
 ## Install (Claude Code)
 
 ```bash
-claude plugin marketplace add suncloudsmoon/stories   # registers marketplace "suncloudsmoon"
+claude plugin marketplace add suncloudsmoon/plugins   # registers marketplace "suncloudsmoon"
 claude plugin install stories@suncloudsmoon
 
 # or from a local clone, before it's published:
