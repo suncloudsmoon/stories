@@ -25,3 +25,6 @@ The maker chose the community convention (matklad's ARCHITECTURE.md pattern) ove
 
 ## [2026-07-03] chore | publication packaging (v1.0.0)
 Made both homes publishable: added an MIT `LICENSE`, and `license` / `homepage` / `repository` to both manifests and the marketplace entry. Filled the `<owner>` placeholders with the real slug (`suncloudsmoon/stories`) across the READMEs and marketplace, and wired a GitHub Actions workflow (`.github/workflows/lint.yml`) that runs the linter on every push/PR. Version → 1.0.0. Packaging only — no soul or behavior change, so per [[origin]] ("never a changelog") this stays a log line, not a saga. Also added `CHANGELOG.md`, README badges, and a hero diagram (`docs/assets/hero.svg`) for the listing. The public `git push` and `claude plugin marketplace add suncloudsmoon/stories` remain the maker's to run.
+
+## [2026-07-04] ship | v1.0.0 published
+Cut the first public release: pushed to https://github.com/suncloudsmoon/stories (public, MIT), tagged `v1.0.0`, CI (lint-canon) green on the first run, GitHub Release published. Installable anywhere via `claude plugin marketplace add suncloudsmoon/stories`. The wiki now has a home outside this machine.
