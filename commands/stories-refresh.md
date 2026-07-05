@@ -27,4 +27,4 @@ Delete orphans and dead canon **confidently** — stale canon is worse than none
 - Find code with real soul that has no covering story, and write one.
 
 ## 5. Rebuild & log
-Regenerate `index.md` from what now exists (systems pages under `## Systems`). Append `## [<today>] refresh | <summary>` to `log.md`, noting what was rewritten, deleted, and added. Report the changes in plain terms.
+Regenerate `index.md` from what now exists (systems pages under `## Systems`; every gate-bearing entry lists its `covers:` globs inline). Append `## [<today>] refresh | <summary>` to `log.md`, noting what was rewritten, deleted, and added. If a canon linter is available (`scripts/lint-canon.py`), run it — a refresh is not done while it reports errors. Report the changes in plain terms.

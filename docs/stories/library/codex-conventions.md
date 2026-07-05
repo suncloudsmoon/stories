@@ -3,7 +3,7 @@ title: Porting to Codex — the lay of the land
 kind: research
 sources: ["https://developers.openai.com/codex/skills", "https://developers.openai.com/codex/plugins", "https://developers.openai.com/codex/plugins/build", "https://developers.openai.com/codex/hooks", "https://developers.openai.com/codex/guides/agents-md", "https://developers.openai.com/codex/config-reference", "https://developers.openai.com/codex/mcp", "https://agents.md/"]
 links: ["[[origin]]", "[[the-gate]]", "[[codex-port]]"]
-refreshed: 2026-06-14
+refreshed: 2026-07-05
 ---
 
 # Porting to Codex — the lay of the land
@@ -27,9 +27,9 @@ refreshed: 2026-06-14
 - **Discovery dirs.** Loose Codex skills live in `.agents/skills/`; a plugin bundles them under its own `skills/`. The layouts rhyme; the loose-skill paths differ from Claude Code.
 - **CLAUDE.md vs AGENTS.md.** Same idea, opposite walk (Claude Code walks *up* from CWD; Codex concatenates *down* from root), and AGENTS.md provenance is flattened — the model can't tell which file a line came from.
 
-## Still to verify before writing the port
+## Resolved since (2026-07-05)
 
-- Exact `.codex-plugin/plugin.json` schema and `marketplace.json` format — `/codex/plugins/build` names them but the field list was not captured. **Do not guess these** — fetch the build doc first (the read-before-write rule applies to our own work too).
+- The `.codex-plugin/plugin.json` schema question closed itself when the bundle shipped: same core fields as the Claude Code manifest (`name`/`version`/`description`/`author`/`homepage`/`repository`/`license`/`keywords`) plus two Codex-only fields — `skills` (path to the bundle's skills dir) and `interface` (display metadata); see `codex/.codex-plugin/plugin.json:13`. Lint's manifest-drift check compares the shared fields only (`scripts/lint-canon.py:37`).
 
 ## So the port is
 

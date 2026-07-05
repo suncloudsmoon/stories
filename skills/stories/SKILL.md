@@ -19,7 +19,7 @@ This discipline is **opt-in per repo.** If `docs/stories/` exists, honor it full
 
 ```
 docs/stories/
-  index.md      # the Atlas — every page, one-line hook, grouped by kind. Read FIRST.
+  index.md      # the Atlas — every page, one-line hook (+ covers: globs on gate-bearing pages), grouped by kind. Read FIRST.
   log.md        # the chronicle — append-only "## [YYYY-MM-DD] <type> | <title>"
   origin.md     # the origin saga — why this project exists, its soul, the maker's preferences as lore
   sagas/        # code subsystem & flow soul (cross-file)
@@ -76,7 +76,7 @@ new feature · refactor · interface/API change · moving or deleting code · an
 
 **Significance overrides the category.** A "bug fix" that changes behavior, or a cleanup big enough to reshape the repo, is gated and storied like any other change. The test isn't the label you'd put on the change — it's: *does this alter the soul or the shape of things?* If yes, it counts.
 
-**How to find the relevant stories:** read `index.md`, then open every page whose `covers:` matches the paths you are about to touch. That index-plus-`covers` lookup *is* the gate. Reading never interrupts the user — it is silent preparation.
+**How to find the relevant stories:** read `index.md` — the Atlas lists each gate-bearing page's `covers:` globs inline, so one read tells you which pages match the paths you are about to touch. Open every page that matches. That index-plus-`covers` lookup *is* the gate. Reading never interrupts the user — it is silent preparation.
 
 ## When to ask (two channels)
 
@@ -90,8 +90,9 @@ A gated change is not done until the canon reflects it. In the **same session, a
 
 - update every story whose soul shifted, and every system page whose shape shifted (re-derive `ARCHITECTURE.md` when the top-level picture moved),
 - write a new saga (or vignette) if you introduced new soul,
-- update `index.md` and append to `log.md`,
-- fix any `[[links]]` you broke.
+- update `index.md` (keep each entry's inline `covers:` true to its page) and append to `log.md`,
+- fix any `[[links]]` you broke,
+- **close the loop:** if the repo carries a canon linter (e.g. `scripts/lint-canon.py`), run it and fix what it flags — a gated change is not done while the canon lints dirty.
 
 Author per the **`writing-a-story`** skill — which means **reading the changed code and the related stories first**, then writing from knowledge, never a guess.
 

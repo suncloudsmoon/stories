@@ -3,7 +3,7 @@ title: The Codex Port — One Soul, Two Homes
 kind: saga
 covers: ["codex/**", "AGENTS.md"]
 links: ["[[origin]]", "[[the-gate]]", "[[codex-conventions]]", "[[the-lint]]"]
-refreshed: 2026-07-03
+refreshed: 2026-07-05
 ---
 
 # The Codex Port — One Soul, Two Homes
@@ -14,6 +14,6 @@ refreshed: 2026-07-03
 
 **The decision.** A **separate bundle** in `codex/`, not a merged dual-manifest repo — the maker chose to leave the shipped Claude Code plugin untouched. To honor that without paying the drift tax the choice invites, the two core skills are **symlinks** back to the root `skills/` (`codex/skills/stories` → `../../skills/stories`): one source of truth, physically unable to diverge. Only the genuinely host-specific parts are new — a `codex/.codex-plugin/plugin.json` manifest, and the commands re-expressed as Codex skills (`codex/skills/stories-*/SKILL.md`), because Codex has no user-defined `/commands` and invokes them as `$stories-init` instead. A root `AGENTS.md` gives Codex the same dogfood discipline `CLAUDE.md` gives Claude Code.
 
-**What it means.** Two homes, one soul — but the seams need tending. The symlinked core can't drift; the command skills and the two manifests *are* duplicated, so **drift is now the failure mode to guard against** — which is what [[the-lint]] exists to catch. The standing rule, written into `CLAUDE.md`, `AGENTS.md`, and each command skill: *when the Claude Code plugin changes, update `codex/` to match.* If you ever find the two homes telling different stories, the canon has already failed — refresh, and make them one again.
+**What it means.** Two homes, one soul — but the seams need tending. The symlinked core can't drift; the command skills and the two manifests *are* duplicated, so **drift is now the failure mode to guard against** — which is what [[the-lint]] exists to catch (`scripts/lint-canon.py:30` pairs each command with its Codex twin). The standing rule, written into `CLAUDE.md`, `AGENTS.md`, and each command skill: *when the Claude Code plugin changes, update `codex/` to match.* If you ever find the two homes telling different stories, the canon has already failed — refresh, and make them one again.
 
 See [[the-gate]] for why the port was cheap, [[codex-conventions]] for the Codex specifics.

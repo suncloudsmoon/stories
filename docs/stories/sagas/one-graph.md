@@ -3,7 +3,7 @@ title: One Graph, Many Kinds
 kind: saga
 covers: ["skills/stories/SKILL.md", "commands/stories-ingest.md"]
 links: ["[[origin]]", "[[the-gate]]", "[[the-craft]]"]
-refreshed: 2026-07-01
+refreshed: 2026-07-05
 ---
 
 # One Graph, Many Kinds
@@ -12,7 +12,7 @@ refreshed: 2026-07-01
 
 **The world before.** The ancestor pattern (the LLM-wiki) was a knowledge base of external sources. This project started narrower: stories about code. Partway in, the maker asked for the wiki to also hold deep-research results "among other things." Two shapes presented themselves — a second, separate wiki bolted alongside, or one graph that absorbs both.
 
-**The decision.** One graph. A page's `kind:` decides its behavior, not which tool or folder owns it (`skills/stories/SKILL.md`, the kinds table). Code kinds (`saga`, `vignette`, `system`) carry `covers:` globs and arm the gate; knowledge kinds (`research`, `concept`, `source`) carry `sources:` and never block a code edit. `/stories-ingest` (`commands/stories-ingest.md`) and deep-research auto-filing both drop their output into `library/` as just-another-kind.
+**The decision.** One graph. A page's `kind:` decides its behavior, not which tool or folder owns it (`skills/stories/SKILL.md:52`, the kinds table). Code kinds (`saga`, `vignette`, `system`) carry `covers:` globs and arm the gate; knowledge kinds (`research`, `concept`, `source`) carry `sources:` and never block a code edit. `/stories-ingest` (`commands/stories-ingest.md`) and deep-research auto-filing both drop their output into `library/` as just-another-kind.
 
 **What it means.** The payoff is the link that crosses the seam: a `research` page can point at the `saga` of the code it justified, and that code's soul can cite the research that bore it. Two tools would have severed that thread forever. The cost is discipline — `kind:` must be set honestly, or a knowledge page could wrongly arm (or wrongly escape) the gate. When you add a page, choose its kind first; everything else follows from it.
 

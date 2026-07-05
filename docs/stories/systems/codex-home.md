@@ -1,16 +1,16 @@
 ---
 title: Codex home — the mirrored bundle
 kind: system
-covers: ["codex/**", "AGENTS.md"]
+covers: ["codex/**", "codex/.codex-plugin/*", "AGENTS.md"]
 links: ["[[codex-port]]", "[[the-map]]"]
-refreshed: 2026-07-03
+refreshed: 2026-07-05
 ---
 
 # Codex home
 
 The second home: a Codex plugin bundle mirroring the Claude Code plugin. This segment exists because the maker chose a separate bundle over a merged dual-manifest repo ([[codex-port]]).
 
-- `codex/.codex-plugin/plugin.json` — the Codex manifest (hand-synced twin).
+- `codex/.codex-plugin/plugin.json` — the Codex manifest (hand-synced twin; `codex/.codex-plugin/plugin.json:13` carries the Codex-only `skills` field).
 - `codex/skills/stories`, `codex/skills/writing-a-story` — **symlinks** to the root `skills/` (cannot drift).
 - `codex/skills/stories-*/SKILL.md` — the four commands re-expressed as Codex skills (`$stories-init` …), hand-synced.
 - `AGENTS.md` — the dogfood discipline for Codex, sibling of `CLAUDE.md`.

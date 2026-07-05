@@ -151,7 +151,7 @@ commands/
 |---|---|---|
 | 1 | Story unit | Layered canon (origin → sagas → vignettes) |
 | 2 | Maintenance mechanism | Skill-only (no hooks/scripts) |
-| 3 | Read-gate line | Behavior/structure/soul changes; bug fixes & cosmetics default-exempt *unless* significant enough to change the repo |
+| 3 | Read-gate line | Behavior/structure/soul changes; default-exempt: bug fixes, typos, formatting, comments, dependency bumps, test-only edits — *unless* significant enough to change the repo |
 | 4 | Ask rule | Conflict-only + discretionary escalation |
 | 5 | Authoring trigger | Auto, same session |
 | 6 | Story shape | Light spine |
@@ -164,6 +164,8 @@ commands/
 | 13 | Canon lint | Read-only `scripts/lint-canon.py` + `/stories-lint`; dev/CI tool, not shipped runtime (skill-only invariant holds); lint diagnoses, refresh treats |
 | 14 | Activation | Dormant by default — active only where `docs/stories/` exists; suggest init at most once, never force |
 | 15 | Systems layer | Canon kind `system` under `docs/stories/systems/` + model-derived root `ARCHITECTURE.md`; legend = guaranteed click; lint enforces coverage. Full decisions: `2026-07-01-systems-layer-design.md` §9 |
+
+*Update (2026-07-05): the verification loop closed — v1.1.0.* Three additions, none reversing a locked row: **(a)** the Atlas lists each gate-bearing page's `covers:` inline, so the §3.1 lookup is one read instead of N page-opens; **(b)** the write side (§3.3) and the init/refresh/ingest procedures end by running the canon linter when the repo carries one — still dev tooling per decision #13, invoked by the model, never a hook; **(c)** the contract's own homes are gate-covered (`README.md` and this spec under the `the-gate` saga's `covers:`; `CLAUDE.md`/`CHANGELOG.md` under the packaging system page), and lint diffs the exempt list across all three contract homes as an error. Row 3's shorthand "cosmetics" was expanded in place to the full six-item §3.1 list — the same decision, now stated canonically in every home.
 
 ## 10. Risks & notes
 

@@ -16,7 +16,7 @@ Design and the reasoning behind every decision: `docs/specs/2026-06-14-stories-p
 
 - `skills/stories/SKILL.md` — the **discipline**: the read-before-change gate, the conflict-only ask rule, auto-authoring, deep-research auto-ingest, and the on-disk canon conventions (frontmatter + `kind` table). The heart of the plugin.
 - `skills/writing-a-story/SKILL.md` — the **craft**: the light spine + quality bar for writing a story, with a worked exemplar.
-- `commands/stories-{init,refresh,ingest}.md` — the slash commands (bootstrap / full cleanup / manual knowledge ingest).
+- `commands/stories-{init,refresh,ingest,lint}.md` — the four slash commands (bootstrap / full cleanup / manual knowledge ingest / read-only health-check).
 - `docs/stories/systems/` + root `ARCHITECTURE.md` — the **shape-map** (systems layer): block-diagram pages (`kind: system`, gated via `covers:`) with a model-derived plain-language face at the repo root. Spec: `docs/specs/2026-07-01-systems-layer-design.md`.
 - `.claude-plugin/plugin.json` — the manifest.
 
@@ -32,7 +32,7 @@ The Codex bundle in `codex/` mirrors the Claude Code plugin. **When you change t
 
 ## Editing the rules — keep them in sync
 
-The behavioral contract — especially the gate-line and its default-exempt list — is stated in **three places**: `skills/stories/SKILL.md`, `README.md`, and the spec (plus the spec's §9 decision table). Change the behavior ⇒ update all of them. Drift between these is the most likely bug in this repo.
+The behavioral contract — especially the gate-line and its default-exempt list — is stated in **three places**: `skills/stories/SKILL.md`, `README.md`, and the spec (plus the spec's §9 decision table). Change the behavior ⇒ update all of them. Drift between these is the most likely bug in this repo — `scripts/lint-canon.py` now diffs the default-exempt list across all three homes mechanically (an error, not a warning), and the gate itself covers `README.md` and the spec via `the-gate`'s `covers:`.
 
 ## Validate
 

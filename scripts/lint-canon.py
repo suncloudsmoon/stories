@@ -22,7 +22,8 @@ IS_PLUGIN_REPO = (ROOT / ".claude-plugin" / "plugin.json").exists() and (
     ROOT / "codex" / ".codex-plugin" / "plugin.json"
 ).exists()
 
-# What counts as "source" for the coverage-gap check (INFO only). Tune freely.
+# Fallback "source" allowlist for non-git checkouts; in a git repo the
+# coverage-gap check walks `git ls-files` minus COVERAGE_EXEMPT instead.
 SOURCE_GLOBS = ["skills/*/SKILL.md", "scripts/*.py"]
 
 # CC command  <->  Codex command-skill. Kept in sync by hand; checked here.
@@ -33,8 +34,19 @@ COMMAND_PAIRS = [
     ("commands/stories-lint.md", "codex/skills/stories-lint/SKILL.md"),
 ]
 MANIFESTS = (".claude-plugin/plugin.json", "codex/.codex-plugin/plugin.json")
-MANIFEST_FIELDS = ["name", "version", "description", "keywords"]
+MANIFEST_FIELDS = ["name", "version", "description", "keywords", "author", "homepage", "repository", "license"]
 CODE_KINDS = {"saga", "vignette", "system"}
+
+# The behavioral contract's default-exempt list, restated in three homes.
+# Drift between them is this repo's self-declared likeliest bug — diffed here.
+EXEMPT_ITEMS = ["bug fixes", "typos", "formatting", "comments",
+                "dependency bumps", "test-only edits"]
+CONTRACT_HOMES = ["skills/stories/SKILL.md", "README.md",
+                  "docs/specs/2026-06-14-stories-plugin-design.md"]
+
+# Paths no story needs to cover: the canon itself, assets, frozen history.
+COVERAGE_EXEMPT = ("docs/stories/", "docs/assets/", "docs/plans/",
+                   "docs/superpowers/", "LICENSE", ".gitignore", ".ref/")
 
 errors, warns, infos = [], [], []
 
@@ -116,16 +128,25 @@ for name, p in sorted(pages.items()):
             errors.append(f"{name}: covers '{g}' matches no file")
             continue
         if refreshed:
-            newest = max((git_last_date(Path(m).relative_to(ROOT).as_posix())
-                          or "0000-00-00") for m in matched)
+            newest, culprit = "0000-00-00", None
+            for m in matched:
+                if not Path(m).is_file():
+                    continue  # glob('**') yields directories too — name files, not dirs
+                rel_m = Path(m).relative_to(ROOT).as_posix()
+                d = git_last_date(rel_m) or "0000-00-00"
+                if d > newest:
+                    newest, culprit = d, rel_m
             if newest > refreshed:
-                warns.append(f"{name}: STALE — covered code changed {newest} > refreshed {refreshed}")
+                warns.append(f"{name}: STALE — {culprit} changed {newest} > refreshed {refreshed}")
     for t in wikilinks(fm):
         if t not in pages:
             errors.append(f"{name}: link [[{t}]] -> no page")
         else:
             inbound[t] += 1
-    for cp, ln in re.findall(r"`([\w./-]+):(\d+)`", text):
+    citations = re.findall(r"`([\w./-]+):(\d+)`", text)
+    if kind in CODE_KINDS and not citations:
+        warns.append(f"{name}: no `path:line` citation — gate-bearing pages must cite the code they cover")
+    for cp, ln in citations:
         fp = ROOT / cp
         if not fp.exists():
             if "/" in cp or cp.endswith((".md", ".py", ".ts", ".js", ".json")):
@@ -137,6 +158,25 @@ for name in pages:
     if name not in ("index", "log", "origin") and inbound.get(name, 0) == 0:
         warns.append(f"{name}: orphan (no inbound [[links]])")
 
+# ---- Atlas mirror: inline covers in index.md must match page frontmatter ----
+idx_path = STORIES / "index.md"
+if idx_path.exists():
+    inline_covers = {}
+    for m in re.finditer(r"^\s*-\s*\[\[([\w-]+)\]\].*—\s*covers\s+(.+)$",
+                         idx_path.read_text(encoding="utf-8"), re.M):
+        inline_covers[m.group(1)] = re.findall(r"`([^`]+)`", m.group(2))
+    for name, p in sorted(pages.items()):
+        if name in ("index", "log"):
+            continue
+        fm = frontmatter(read(p.relative_to(ROOT).as_posix())) or ""
+        if fm_scalar(fm, "kind") in CODE_KINDS:
+            covers = fm_list(fm, "covers")
+            if name not in inline_covers:
+                warns.append(f"index: [[{name}]] carries covers: but the Atlas lists none inline")
+            elif set(inline_covers[name]) != set(covers):
+                errors.append(f"index: [[{name}]] inline covers != frontmatter covers "
+                              f"({sorted(inline_covers[name])} vs {sorted(covers)})")
+
 # ---- manifest + command drift (this plugin's repo only) ----
 if IS_PLUGIN_REPO:
     try:
@@ -146,13 +186,33 @@ if IS_PLUGIN_REPO:
                 errors.append(f"manifest drift on '{f}': {a.get(f)!r} (claude) != {b.get(f)!r} (codex)")
     except Exception as e:
         errors.append(f"manifest read failed: {e}")
+    for home in CONTRACT_HOMES:
+        try:
+            body_l = read(home).lower()
+        except (OSError, UnicodeDecodeError) as e:
+            errors.append(f"contract home unreadable: {home}: {e}")
+            continue
+        gate_lines = [l for l in body_l.splitlines() if "default-exempt" in l]
+        if not gate_lines:
+            errors.append(f"exempt-list drift: {home} has no 'default-exempt' line")
+        for gl in gate_lines:
+            missing = [i for i in EXEMPT_ITEMS if i not in gl]
+            if missing:
+                errors.append(f"exempt-list drift: a 'default-exempt' line in {home} is missing: {', '.join(missing)}")
     for cc, cx in COMMAND_PAIRS:
         if not (ROOT / cc).exists():
             errors.append(f"missing CC command: {cc}")
         elif not (ROOT / cx).exists():
             errors.append(f"missing Codex skill: {cx}")
-        elif step_titles(read(cc)) != step_titles(read(cx)):
-            warns.append(f"command drift: {cc} and {cx} have different step structure")
+        else:
+            ta, tb = step_titles(read(cc)), step_titles(read(cx))
+            if ta != tb:
+                i = next((k for k, (x, y) in enumerate(zip(ta, tb)) if x != y),
+                         min(len(ta), len(tb)))
+                got_cc = ta[i] if i < len(ta) else "<missing>"
+                got_cx = tb[i] if i < len(tb) else "<missing>"
+                warns.append(f"command drift: {cc} vs {cx} — step {i + 1}: "
+                             f"{got_cc!r} (claude) != {got_cx!r} (codex)")
 
 # ---- systems layer: ARCHITECTURE.md <-> docs/stories/systems/ ----
 ARCH_FILE = ROOT / "ARCHITECTURE.md"
@@ -203,10 +263,36 @@ for p in pages.values():
     fm = frontmatter(read(p.relative_to(ROOT).as_posix())) or ""
     for g in fm_list(fm, "covers"):
         covered.update(Path(m).resolve() for m in glob(str(ROOT / g), recursive=True))
-for sg in SOURCE_GLOBS:
-    for f in glob(str(ROOT / sg), recursive=True):
-        if Path(f).resolve() not in covered:
-            infos.append(f"uncovered: {Path(f).relative_to(ROOT).as_posix()} (no story)")
+def git_files(*args):
+    try:
+        out = subprocess.run(
+            ["git", "-C", str(ROOT), "ls-files", "-z", *args],  # -z: NUL-split, no C-quoting
+            capture_output=True, text=True, timeout=10,
+        )
+        return [f for f in out.stdout.split("\0") if f]
+    except Exception:
+        return []
+
+
+tracked = git_files() + git_files("--others", "--exclude-standard")
+if tracked:
+    uncovered = []
+    for f in tracked:
+        if f.startswith(COVERAGE_EXEMPT) or f.endswith(".gitkeep"):
+            continue
+        if not (ROOT / f).is_file():
+            continue  # still in the index but gone from the worktree
+        if (ROOT / f).resolve() not in covered:
+            uncovered.append(f)
+    for f in uncovered[:20]:
+        infos.append(f"uncovered: {f} (no story covers it)")
+    if len(uncovered) > 20:
+        infos.append(f"uncovered: …and {len(uncovered) - 20} more")
+else:  # not a git checkout — fall back to the allowlist probe
+    for sg in SOURCE_GLOBS:
+        for f in glob(str(ROOT / sg), recursive=True):
+            if Path(f).resolve() not in covered:
+                infos.append(f"uncovered: {Path(f).relative_to(ROOT).as_posix()} (no story)")
 
 
 def section(title, items):

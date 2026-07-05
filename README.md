@@ -26,9 +26,9 @@ Restart Claude Code to load it. The plugin stays **dormant** until a repo has `d
 ## How it works
 
 - **Skill-only.** No hooks, no runtime scripts — an always-on skill carries the discipline (a dev-only `scripts/lint-canon.py` checks canon health but ships nothing to users). Portable — and ported to Codex (see `codex/`).
-- **Read-before-change gate.** Before a change that reshapes the repo's behavior, structure, or soul (feature, refactor, interface change, moving/deleting code) the model reads the stories whose `covers:` matches the files in play. Routine bug fixes and cosmetics are exempt — *unless* they're significant enough to change the repository, in which case they're storied too.
+- **Read-before-change gate.** Before a change that reshapes the repo's behavior, structure, or soul (feature, refactor, interface change, moving/deleting code) the model reads the stories whose `covers:` matches the files in play. Routine changes are **default-exempt** — bug fixes, typos, formatting, comments, dependency bumps, test-only edits — *unless* they're significant enough to change the repository, in which case they're storied too.
 - **Low friction.** Reading never interrupts you. The model proceeds on judgment and stops to ask only on a real conflict — or when something genuinely warrants your attention.
-- **Auto-author.** After a gated change, the model rewrites the affected stories in the same session.
+- **Auto-author.** After a gated change, the model rewrites the affected stories in the same session — and closes by running the canon linter when the repo carries one.
 - **Deep research auto-files.** A deep-research run lands as a `research` page in the library, cross-linked into the graph.
 - **Shape-map.** Alongside the why, the plugin keeps the *shape*: `ARCHITECTURE.md` at the repo root — a plain-language block diagram of how the app is put together, every block linked (legend table) to a `docs/stories/systems/` page (`kind: system`, gated like sagas), recently added blocks highlighted. Derived from the systems pages by the model; updated as part of the same read-then-rewrite discipline.
 

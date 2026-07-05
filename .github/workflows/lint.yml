@@ -17,7 +17,6 @@ jobs:
       - name: Manifests parse
         run: |
           python3 -c "import json; json.load(open('.claude-plugin/plugin.json'))"
-          python3 -c "import json; json.load(open('.claude-plugin/marketplace.json'))"
           python3 -c "import json; json.load(open('codex/.codex-plugin/plugin.json'))"
       - name: Canon health-check
         run: python3 scripts/lint-canon.py

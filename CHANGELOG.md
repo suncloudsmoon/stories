@@ -4,6 +4,38 @@ All notable changes to this project are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] — 2026-07-05
+
+The verification loop closes — the audit found the discipline trusted and
+never verified; now every write path verifies.
+
+### Added
+- The Atlas (`docs/stories/index.md`) lists each gate-bearing page's
+  `covers:` globs inline — the gate lookup is one read instead of N.
+- The after-change sweep and the init/refresh/ingest procedures (both
+  homes) close by running the canon linter when the repo carries one.
+- Linter checks: default-exempt-list sync across the three contract homes
+  (error, anchored to each home's gate-line); the Atlas's inline covers
+  diffed against every page's frontmatter (error on mismatch); required
+  `path:line` citation on gate-bearing pages (warn); coverage sweep over
+  tracked + untracked files minus an exempt list (info, capped);
+  staleness messages name the file that moved; command-drift messages
+  name the differing step; manifest drift now compares all eight shared
+  fields.
+- Gate coverage for the contract's own homes: `README.md` + the design
+  spec (the-gate), `CLAUDE.md` + `CHANGELOG.md` (claude-code-home), CI
+  (canon-tooling), the systems spec (the-map).
+
+### Fixed
+- CI workflow no longer parses the removed `marketplace.json` — the job
+  had failed on every push since 2026-07-04.
+- Codex `stories-ingest` offers **deep** research again (wording drift).
+- `AGENTS.md` carries the three-places sync rule and the systems layer;
+  `CLAUDE.md` names all four commands.
+- README states the full default-exempt list (was "cosmetics").
+- Canon no longer cites the removed `marketplace.json`; its 2026-07-04
+  removal is now chronicled in `docs/stories/log.md`.
+
 ## [1.0.0] — 2026-07-03
 
 First public release.
@@ -52,6 +84,7 @@ First public release.
   the four slash commands, the Claude Code manifest, and the bootstrapped
   `docs/stories/` canon.
 
+[1.1.0]: https://github.com/suncloudsmoon/stories/releases/tag/v1.1.0
 [1.0.0]: https://github.com/suncloudsmoon/stories/releases/tag/v1.0.0
 [0.3.0]: https://github.com/suncloudsmoon/stories/releases/tag/v0.3.0
 [0.2.0]: https://github.com/suncloudsmoon/stories/releases/tag/v0.2.0

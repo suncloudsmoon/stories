@@ -29,4 +29,4 @@ Create `docs/stories/library/<slug>.md` to the craft bar for its kind. Frontmatt
 - Cross-link `[[...]]` to related sagas, concepts, and library pages. Add back-links where they help.
 
 ## 5. Atlas & log
-Add the page to `index.md` under `## Library` with a one-line hook. Append `## [<today>] ingest | <title>` to `log.md`. Report what landed and what it linked to.
+Add the page to `index.md` under `## Library` with a one-line hook. Append `## [<today>] ingest | <title>` to `log.md`. If a canon linter is available (`scripts/lint-canon.py`), run it and fix what it flags. Report what landed and what it linked to.
