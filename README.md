@@ -2,16 +2,14 @@
 
 [![CI](https://github.com/suncloudsmoon/stories/actions/workflows/lint.yml/badge.svg)](https://github.com/suncloudsmoon/stories/actions/workflows/lint.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-![Version](https://img.shields.io/badge/version-1.0.0-2ea44f)
-![Claude Code plugin](https://img.shields.io/badge/Claude%20Code-plugin-8A2BE2)
 
-![stories — read the covering stories, change the code, rewrite them; all in the same session](docs/assets/hero.svg)
+![stories — capture the why, not the what. Read the covering stories, change the code, rewrite them — all in the same session.](docs/assets/hero.svg)
 
 A Claude Code plugin that maintains a **soul-bearing wiki** of your codebase under `docs/stories/`.
 
-Most docs describe *what* the code does. Stories capture the ***why*** — the tension a decision resolved, the road not taken, what the maker cares about. The model reads the relevant stories before any non-trivial change and rewrites them after, so the canon stays true as the code moves. The same wiki doubles as a general knowledge base for deep-research results, syntheses, and sources — one interlinked graph where research links to the code it shaped.
+Most docs describe *what* the code does. Stories capture the *why* — the tension a decision resolved, the road not taken, what the maker cares about. The model reads the relevant stories before any non-trivial change and rewrites them after, so the canon stays true as the code moves. The same wiki doubles as a general knowledge base for deep-research results, syntheses, and sources — one interlinked graph where research links to the code it shaped.
 
-It's a storytelling take on the LLM-wiki pattern — an LLM-maintained, compounding markdown knowledge base — repointed from "a knowledge base of sources" to "the soul of a codebase."
+It's a storytelling take on the LLM-wiki pattern: the same LLM-maintained, compounding knowledge base, repointed from "a knowledge base of sources" to "the soul of a codebase."
 
 ## Install (Claude Code)
 

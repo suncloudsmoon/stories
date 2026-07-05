@@ -28,3 +28,6 @@ Made both homes publishable: added an MIT `LICENSE`, and `license` / `homepage` 
 
 ## [2026-07-04] ship | v1.0.0 published
 Cut the first public release: pushed to https://github.com/suncloudsmoon/stories (public, MIT), tagged `v1.0.0`, CI (lint-canon) green on the first run, GitHub Release published. Installable anywhere via `claude plugin marketplace add suncloudsmoon/stories`. The wiki now has a home outside this machine.
+
+## [2026-07-04] chore | README + hero redesigned
+Replaced the midnight-gradient flowchart hero (`docs/assets/hero.svg`) with a book-plate title page — paper ground, Georgia throughout, one rubric accent, the read → change → rewrite loop set typographically; footer still names `docs/stories/` and `ARCHITECTURE.md`. README trimmed to match: dropped the hardcoded version badge and the vanity plugin badge, unnested the intro's double em-dash. A max-effort review pass then hardened the asset (WCAG contrast on the muted lines, the session promise restored to the alt/aria text, full-bleed ground, non-collapsing arrow gaps). The gate-line under "How it works" is byte-identical to before (three-places contract). Log line, not a saga, per [[origin]].
