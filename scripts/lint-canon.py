@@ -15,10 +15,9 @@ import shutil
 import subprocess
 import sys
 import tempfile
-from glob import glob
 from pathlib import Path
 
-# One parser for covers: — the hook's — so the linter can never read a line the gate can't.
+# One parser and one matcher for covers: — the hook's — so the linter never disagrees with the gate.
 _spec = importlib.util.spec_from_file_location("stories_hook", Path(__file__).resolve().parent.parent / "hooks" / "stories.py")
 hook = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(hook)
@@ -32,18 +31,28 @@ LINE = re.compile(r"`([\w./-]+):(\d+)`")
 CODE_SPAN = re.compile(r"`[^`\n]*`")  # prose may name `[[links]]` without linking
 
 
-def frontmatter(text):
-    m = re.match(r"---\n(.*?)\n---\n", text, re.S)
-    return m.group(1) if m else ""
-
-
-def git_last_date(root, rel):
+def git(root, *args):
     try:
-        out = subprocess.run(["git", "-C", str(root), "log", "-1", "--format=%cs", "--", rel],
-                             capture_output=True, text=True, timeout=10)
-        return out.stdout.strip() or None
+        out = subprocess.run(["git", "-C", str(root), *args], capture_output=True, text=True, timeout=30)
+        return out.stdout if out.returncode == 0 else None
     except (OSError, subprocess.SubprocessError):
         return None
+
+
+def repo_files(root):
+    """Every file a covers: glob could mean — git's view (tracked + untracked, not ignored), else a walk."""
+    listed = git(root, "ls-files", "-z", "--cached", "--others", "--exclude-standard")
+    if listed is not None:
+        return sorted(f for f in set(listed.split("\0")) if f and (root / f).is_file())
+    return sorted(p.relative_to(root).as_posix() for p in root.rglob("*")
+                  if p.is_file() and ".git" not in p.relative_to(root).parts)
+
+
+def last_commit(root, files):
+    """(date, file) of the newest commit touching any of files — one git call, not one per file."""
+    out = git(root, "log", "-1", "--format=%cs", "--name-only", "--", *files) or ""
+    lines = [line for line in out.splitlines() if line.strip()]
+    return (lines[0], lines[1] if len(lines) > 1 else files[0]) if lines else ("", None)
 
 
 def is_code_path(path):
@@ -71,6 +80,7 @@ def check_citations(root, where, text, errors, warns):
 
 def lint(root):
     errors, warns, infos = [], [], []
+    files = repo_files(root)
     canon = root / "docs" / "stories"
     pages = {p.stem: p for p in canon.rglob("*.md")} if canon.is_dir() else {}
     index = pages.pop("index", None)
@@ -81,24 +91,26 @@ def lint(root):
 
     for name, page in sorted(pages.items()):
         text = page.read_text(encoding="utf-8")
-        front = frontmatter(text)
+        front, _ = hook.split_page(text)
         globs = hook.parse_covers(front)
+        if globs is None and page.parent.name == "sagas":
+            errors.append(f"{name}: pages in sagas/ need covers: — without it the gate never sees them")
         if globs is not None:
             if not globs:
                 errors.append(f'{name}: covers: yields no globs — it must be a single-line list like covers: ["src/**"]')
             refreshed = re.search(r"^refreshed:\s*(\d{4}-\d{2}-\d{2})\s*$", front, re.M)
             if not refreshed:
                 errors.append(f"{name}: story needs a valid refreshed: YYYY-MM-DD")
-            for g in globs:
-                files = [Path(m) for m in glob(str(root / g), recursive=True) if Path(m).is_file()]
-                if not files:
+            covered = []
+            for g in globs:  # the hook's own matcher, so lint and gate agree on every path
+                matched = [f for f in files if hook.glob_regex(g).fullmatch(f)]
+                if not matched:
                     errors.append(f"{name}: covers '{g}' matches no file")
-                elif refreshed:
-                    dated = [(git_last_date(root, f.relative_to(root).as_posix()) or "", f) for f in files]
-                    newest, culprit = max(dated)
-                    if newest > refreshed.group(1):
-                        warns.append(f"REVIEW {name} — {culprit.relative_to(root).as_posix()} committed "
-                                     f"{newest} > refreshed {refreshed.group(1)}")
+                covered += matched
+            if covered and refreshed:
+                newest, culprit = last_commit(root, sorted(set(covered)))
+                if newest > refreshed.group(1):
+                    warns.append(f"REVIEW {name} — {culprit} committed {newest} > refreshed {refreshed.group(1)}")
         for target in LINK.findall(CODE_SPAN.sub("", text)):
             if target in pages:
                 inbound[target] += 1
@@ -145,9 +157,16 @@ def check_plugin(root, errors):
         elif not link.exists():
             errors.append(f"{link.relative_to(root)}: broken symlink")
     try:
-        json.loads((root / "hooks" / "hooks.json").read_text())
+        events = json.loads((root / "hooks" / "hooks.json").read_text()).get("hooks", {})
     except (OSError, ValueError) as e:
         errors.append(f"hooks/hooks.json: {e}")
+        return
+    for missing in sorted({"PostToolUse", "PreToolUse", "Stop"} - set(events)):
+        errors.append(f"hooks/hooks.json: no {missing} hook — the gate needs all three events")
+    commands = [h.get("command", "") for groups in events.values() for group in groups for h in group.get("hooks", [])]
+    for script in sorted(set(re.findall(r"\$\{CLAUDE_PLUGIN_ROOT\}/([\w./-]+)", " ".join(commands)))):
+        if not (root / script).is_file():
+            errors.append(f"hooks/hooks.json: runs {script}, which does not exist")
 
 
 def main(root):
@@ -214,6 +233,26 @@ def self_test():
          lambda e, w: has(e, "no globs"))
     case("covers with a comment and single quotes", edit("docs/stories/sagas/auth.md", 'covers: ["src/auth.py"]',
                                                          "covers: ['src/auth.py']   # why"), lambda e, w: e == [])
+    case("saga without covers", edit("docs/stories/sagas/auth.md", 'covers: ["src/auth.py"]\n', ""),
+         lambda e, w: has(e, "sagas/"))
+
+    def hidden_only(root):
+        (root / "conf").mkdir()
+        (root / "conf/.settings.py").write_text("x = 1\n")
+        edit("docs/stories/sagas/auth.md", '["src/auth.py"]', '["src/auth.py", "conf/**"]')(root)
+    case("glob matches a hidden file, like the hook", hidden_only, lambda e, w: e == [])
+
+    def plugin_with_dead_hook(root):
+        for m in (".claude-plugin", "codex/.codex-plugin"):
+            (root / m).mkdir(parents=True)
+            (root / m / "plugin.json").write_text('{"name": "x"}')
+        (root / "skills").mkdir()
+        (root / "hooks").mkdir()
+        (root / "codex/hooks").symlink_to("../hooks")
+        (root / "hooks/hooks.json").write_text(json.dumps({"hooks": {e: [{"hooks": [
+            {"type": "command", "command": 'python3 "${CLAUDE_PLUGIN_ROOT}/hooks/missing.py"'}]}]
+            for e in ("PostToolUse", "PreToolUse", "Stop")}}))
+    case("hooks.json names a missing script", plugin_with_dead_hook, lambda e, w: has(e, "missing.py"))
     case("broken link", edit("docs/stories/origin.md", "[[auth]]", "[[auth]] [[ghost]]"),
          lambda e, w: has(e, "ghost"))
     case("link syntax named in code is not a link", edit("docs/stories/origin.md", "[[auth]]", "[[auth]] `[[links]]`"),

@@ -28,6 +28,8 @@ Story = namedtuple("Story", "path title globs")  # path: root-relative posix; gl
 CANON = "docs/stories/"
 QUIET = (0, "", "")
 COVERS = re.compile(r"^covers:(.*)$", re.M)
+FRONT = re.compile(r"---\n(.*?)\n---(?:\n|$)", re.S)
+EDIT_TOOLS = {"Edit", "Write", "MultiEdit", "NotebookEdit", "apply_patch"}
 PATCH_PATH = re.compile(r"^\*\*\* (?:Add File|Update File|Delete File|Move to): (.+)$", re.M)
 
 
@@ -63,20 +65,27 @@ def parse_covers(front):
     line = COVERS.search(front)
     if not line:
         return None
-    listed = re.match(r"\s*\[(.*)\]\s*(?:#.*)?$", line.group(1))
+    listed = re.match(r"\s*\[([^\]]*)\]\s*(?:#.*)?$", line.group(1))
     items = (g.strip().strip("\"'").strip() for g in listed.group(1).split(",")) if listed else ()
     return [g for g in items if g]
 
 
+def split_page(text):
+    """(frontmatter, body) of a page — tolerant of CRLF and a missing final newline."""
+    text = text.replace("\r\n", "\n")
+    m = FRONT.match(text)
+    return (m.group(1), text[m.end():]) if m else ("", text)
+
+
 def load_stories(root):
+    # shortcut: re-reads the canon on every event (~30 ms here); cache on docs/stories mtimes if canons reach hundreds of pages.
     stories = []
     for page in sorted((root / "docs" / "stories").rglob("*.md")):
-        text = page.read_text(encoding="utf-8", errors="replace")
-        front = re.match(r"---\n(.*?)\n---\n", text, re.S)
-        globs = parse_covers(front.group(1)) if front else None
+        front, body = split_page(page.read_text(encoding="utf-8", errors="replace"))
+        globs = parse_covers(front)
         if not globs:
             continue
-        heading = re.search(r"^# (.+)$", text, re.M)
+        heading = re.search(r"^# (.+)$", body, re.M)
         stories.append(Story(page.relative_to(root).as_posix(),
                              heading.group(1).strip() if heading else page.stem,
                              [glob_regex(g) for g in globs]))
@@ -110,10 +119,6 @@ def pointers(stories):
     return "; ".join(f"{s.path} — “{s.title}”" for s in unique)
 
 
-def code_paths(stories):
-    return {s.path for s in stories}
-
-
 def handle(event, root, state):
     """One hook event -> (exit code, stdout, stderr). Mutates the session state."""
     name = event.get("hook_event_name")
@@ -124,11 +129,27 @@ def handle(event, root, state):
     def resolve(path):
         return relative(root, os.path.join(base, path))
 
-    if name == "PostToolUse":
+    tool = event.get("tool_name", "")
+
+    if name == "PostToolUse" and tool in EDIT_TOOLS:  # the edit landed — only now does it count
+        for rel in filter(None, map(resolve, edit_targets(tool, tool_input))):
+            if rel.startswith(CANON):
+                if rel not in state["touched"]:
+                    state["touched"].append(rel)
+                continue
+            for s in covering(stories, rel):
+                files = state["edited"].setdefault(s.path, [])
+                if rel not in files:
+                    files.append(rel)
+                if s.path in state["touched"]:  # the story predates this change: ask again at Stop
+                    state["touched"].remove(s.path)
+        return QUIET
+
+    if name == "PostToolUse":  # a Read
         rel = resolve(tool_input["file_path"]) if tool_input.get("file_path") else None
         if rel is None:
             return QUIET
-        if rel in code_paths(stories):  # reading the story itself is the point
+        if rel in {s.path for s in stories}:  # reading the story itself is the point
             if rel not in state["announced"]:
                 state["announced"].append(rel)
             return QUIET
@@ -141,25 +162,18 @@ def handle(event, root, state):
         return 0, json.dumps({"hookSpecificOutput": {"hookEventName": "PostToolUse",
                                                      "additionalContext": message}}), ""
 
-    if name == "PreToolUse":
-        targets = [r for r in map(resolve, edit_targets(event.get("tool_name", ""), tool_input)) if r]
+    if name == "PreToolUse":  # the gate only; edits are recorded when they land (PostToolUse)
+        targets = [r for r in map(resolve, edit_targets(tool, tool_input)) if r]
         blocked = [(rel, s) for rel in targets if not rel.startswith(CANON)
                    for s in covering(stories, rel) if s.path not in state["announced"]]
-        if blocked:  # the edit doesn't happen, so nothing is recorded as edited
+        if blocked:
+            # Known limit: parallel edits under one story pass once the first is blocked; the
+            # pointer reaches the model in that same turn, and Codex emits no Read to wait for.
             for _, s in blocked:
                 if s.path not in state["announced"]:
                     state["announced"].append(s.path)
             files = ", ".join(f"`{f}`" for f in dict.fromkeys(rel for rel, _ in blocked))
             return 2, "", f"Before editing {files}, read {pointers([s for _, s in blocked])}. Then retry."
-        for rel in targets:
-            if rel.startswith(CANON):
-                if rel not in state["touched"]:
-                    state["touched"].append(rel)
-                continue
-            for s in covering(stories, rel):
-                files = state["edited"].setdefault(s.path, [])
-                if rel not in files:
-                    files.append(rel)
         return QUIET
 
     if name == "Stop":
@@ -281,7 +295,8 @@ def self_test():
         root, state = repo(tmp), fresh()
         handle(event(root, "PreToolUse", "Edit", file_path="src/session.py"), root, state)  # blocked: never happened
         check("blocked_edit_not_recorded", handle(event(root, "Stop"), root, dict(state))[1] == "")
-        handle(event(root, "PreToolUse", "Edit", file_path="src/session.py"), root, state)  # the retry lands
+        handle(event(root, "PreToolUse", "Edit", file_path="src/session.py"), root, state)  # the retry passes the gate
+        handle(event(root, "PostToolUse", "Edit", file_path="src/session.py"), root, state)  # ...and lands
         _, out, _ = handle(event(root, "Stop"), root, state)
         check("stop_reminds_once", json.loads(out)["decision"] == "block"
               and "src/session.py" in json.loads(out)["reason"]
@@ -290,10 +305,29 @@ def self_test():
 
     with tempfile.TemporaryDirectory() as tmp:
         root, state = repo(tmp), fresh()
-        handle(event(root, "PreToolUse", "Edit", file_path="src/session.py"), root, state)
-        handle(event(root, "PreToolUse", "Edit", file_path="src/session.py"), root, state)
-        handle(event(root, "PreToolUse", "Edit", file_path="docs/stories/sagas/auth.md"), root, state)
+        handle(event(root, "PostToolUse", "Edit", file_path="src/session.py"), root, state)
+        handle(event(root, "PostToolUse", "Edit", file_path="docs/stories/sagas/auth.md"), root, state)
         check("touched_story_silences_stop", handle(event(root, "Stop"), root, state)[1] == "")
+
+    with tempfile.TemporaryDirectory() as tmp:
+        root, state = repo(tmp), fresh()
+        handle(event(root, "PostToolUse", "Edit", file_path="docs/stories/sagas/auth.md"), root, state)
+        handle(event(root, "PostToolUse", "Edit", file_path="src/session.py"), root, state)
+        check("story_touched_before_code_still_reminds", handle(event(root, "Stop"), root, state)[1] != "")
+
+    with tempfile.TemporaryDirectory() as tmp:
+        root, state = repo(tmp), fresh()
+        handle(event(root, "PostToolUse", "Read", file_path="docs/stories/sagas/auth.md"), root, state)
+        handle(event(root, "PreToolUse", "Edit", file_path="src/session.py"), root, state)  # allowed, then fails
+        check("failed_edit_not_recorded", handle(event(root, "Stop"), root, state)[1] == "")
+
+    with tempfile.TemporaryDirectory() as tmp:
+        root = repo(tmp, '---\ncovers: ["src/session.py"]  # see [x]\nrefreshed: 2026-10-29\n---\n# T\n')
+        check("covers_comment_with_brackets", covering(load_stories(root), "src/session.py") != [])
+
+    with tempfile.TemporaryDirectory() as tmp:
+        root = repo(tmp, story.replace("\n", "\r\n"))
+        check("crlf_frontmatter", covering(load_stories(root), "src/session.py") != [])
 
     with tempfile.TemporaryDirectory() as tmp:
         root, state = repo(tmp), fresh()
