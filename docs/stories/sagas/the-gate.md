@@ -1,19 +1,22 @@
 ---
-title: The Gate, and Why It's a Skill
-kind: saga
-covers: ["skills/stories/SKILL.md", "README.md", "docs/specs/2026-06-14-stories-plugin-design.md"]
-links: ["[[origin]]", "[[one-graph]]", "[[the-craft]]", "[[codex-conventions]]", "[[the-lint]]"]
-refreshed: 2026-07-05
+covers: ["skills/stories/SKILL.md", "hooks/**"]
+refreshed: 2026-10-29
 ---
 
-# The Gate, and Why It's a Skill
+# The Gate — From the Model's Judgment to a Hook
 
-**The hook.** The whole plugin rests on one move: *read the relevant stories before you reshape the code.* Everything else serves that. So how the gate is enforced is the most important decision in the project — and we chose the weaker-looking option on purpose.
+**The hook.** The whole plugin rests on one move: *read the story before you reshape the code.* How that move gets triggered is the most important decision in the project — and in 2.0 we reversed it.
 
-**The world before.** There were two ways to make the gate fire. A **hook** could intercept every edit deterministically and block until the stories were read — a hard guarantee. Or a **skill** could carry the rule as a standing instruction the model honors each session — best-effort. Hooks are Claude-Code-specific and brittle: they fight the model, they're awkward to scope (*is this edit a behavior change?*), and they don't travel to Codex.
+**The world before.** v1 was skill-only. A hook would have been deterministic, but hooks were Claude-Code-only, and the plugin was meant to travel to Codex. So the skill asked the model to do two things on its own: decide whether its change was significant enough to count (behavior, structure, or soul — with six default-exempt categories and a rule that significance overrides the category), then look up which stories covered the files in play. Both steps are judgment, and judgment is where a best-effort gate leaks: a model that files its change under "bug fix" never opens the story the fix betrays.
 
-**The decision.** Skill-only (`skills/stories/SKILL.md:70`). The gate is armed by data, not by interception: every story declares `covers:` globs, the Atlas (`docs/stories/index.md`) lists them inline beside each entry — one read resolves the lookup — and before a behavior/structure/soul change the model opens whatever `covers:` the files in play. That lookup *is* the gate — pure markdown, no runtime. The cost is honesty: skill-only means best-effort, not enforced (`docs/specs/2026-06-14-stories-plugin-design.md` §10). We took that trade because a portable, low-friction rule the model actually follows beats a hard wall that works in only one host and annoys everyone into disabling it.
+**The decision.** Two things changed. Codex began running plugin hooks from the same `hooks/hooks.json`, honoring the same outputs — so portability stopped arguing against a hook. And the maker asked for a plugin that any model finds easy to use. So 2.0 moves *when to read* from the model's judgment into the harness (`hooks/stories.py#def handle`):
 
-**What it means.** The gate's reliability lives in three places now: the skill's prose, the accuracy of every `covers:`, and the loop that closes behind a change — the after-change sweep runs the canon linter when one is present, so a silent miss surfaces: links, covers, citations and the Atlas mirror in the same session, staleness at the next committed check ([[the-lint]]). The contract's own homes are covered too: this saga's `covers:` includes `README.md` and the design spec, so the gate fires when its own rulebook is edited. If `covers:` rots, the gate goes blind — which is why refresh treats a dead `covers:` as a bug, not a cosmetic. If you ever need a true guarantee for one thing (deep-research auto-filing is the only candidate), a single optional hook is the escape hatch — but adding it costs the Codex port, so it stays on the shelf until best-effort actually fails.
+- When the model **reads** a covered file, the hook names its story — the moment Claude Code's own path-scoped rules fire, before any edit is planned.
+- An **edit** that arrives before its story was named is held back once (exit 2). Blocking is the only way to get ahead of the edit: context a hook adds there lands after the tool has already run.
+- At the **end of a turn**, if covered code changed and its story didn't, the hook asks once whether the why changed.
 
-See [[origin]] for why any of this exists.
+Each message is one line that names the page, never its body, and each fires at most once per story per session. That restraint is deliberate: Graphify's hooks, which fire on every search, are what users call spammy and models learn to ignore. And the hook fails open (`hooks/stories.py#fail open`) — a bug in the gate must never block the work it guards.
+
+**What it means.** The skill still says *what* to do (`skills/stories/SKILL.md#Before you change code`); the hook only says *when*. The exempt list is gone because nothing needs classifying — reading a story costs a few hundred tokens, skipping the one that mattered costs the soul. The hook sees only what `covers:` tells it, so a dead or missing `covers:` blinds the gate. And if the hook ever starts talking on every read, or blocking twice, it has become the nag [[origin]] forbids — cut it back.
+
+See [[the-lint]] for how drift surfaces, [[codex-port]] for the shared hooks, [[one-graph]] for what `covers:` means.

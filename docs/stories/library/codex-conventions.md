@@ -1,12 +1,10 @@
 ---
-title: Porting to Codex — the lay of the land
-kind: research
 sources: ["https://developers.openai.com/codex/skills", "https://developers.openai.com/codex/plugins", "https://developers.openai.com/codex/plugins/build", "https://developers.openai.com/codex/hooks", "https://developers.openai.com/codex/guides/agents-md", "https://developers.openai.com/codex/config-reference", "https://developers.openai.com/codex/mcp", "https://agents.md/"]
-links: ["[[origin]]", "[[the-gate]]", "[[codex-port]]"]
-refreshed: 2026-07-05
 ---
 
 # Porting to Codex — the lay of the land
+
+> **Superseded in part, 2026-10-29.** This sweep predates Codex plugin hooks. Codex now runs a plugin's `hooks/hooks.json` by default, so its "no hooks" verdicts below are history: stories 2.0 ships one hook to both homes ([[the-gate]], [[codex-port]]).
 
 *Filed from a three-front research sweep (skills/plugins, AGENTS.md, config/commands), 2026-06-14. Codex docs current ~codex-cli v0.130.0.*
 
@@ -29,7 +27,7 @@ refreshed: 2026-07-05
 
 ## Resolved since (2026-07-05)
 
-- The `.codex-plugin/plugin.json` schema question closed itself when the bundle shipped: same core fields as the Claude Code manifest (`name`/`version`/`description`/`author`/`homepage`/`repository`/`license`/`keywords`) plus two Codex-only fields — `skills` (path to the bundle's skills dir) and `interface` (display metadata); see `codex/.codex-plugin/plugin.json:13`. Lint's manifest-drift check compares the shared fields only (`scripts/lint-canon.py:37`).
+- The `.codex-plugin/plugin.json` schema question closed itself when the bundle shipped: same core fields as the Claude Code manifest (`name`/`version`/`description`/`author`/`homepage`/`repository`/`license`/`keywords`) plus two Codex-only fields — `skills` (path to the bundle's skills dir) and `interface` (display metadata); see `codex/.codex-plugin/plugin.json#"skills"`. Lint's manifest-drift check compares the shared fields only (`scripts/lint-canon.py#MANIFEST_FIELDS = [`).
 
 ## So the port is
 

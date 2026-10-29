@@ -14,9 +14,14 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Manifests parse
+      - name: Manifests and hooks parse
         run: |
           python3 -c "import json; json.load(open('.claude-plugin/plugin.json'))"
           python3 -c "import json; json.load(open('codex/.codex-plugin/plugin.json'))"
+          python3 -c "import json; json.load(open('hooks/hooks.json'))"
+      - name: Self-tests (hook + linter)
+        run: |
+          python3 hooks/stories.py --self-test
+          python3 scripts/lint-canon.py --self-test
       - name: Canon health-check
         run: python3 scripts/lint-canon.py

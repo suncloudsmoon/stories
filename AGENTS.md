@@ -1,26 +1,37 @@
 # AGENTS.md
 
-Guidance for AI coding agents (Codex and other AGENTS.md-aware tools) working in this repository. Codex auto-loads this at session start. The Claude Code equivalent is `CLAUDE.md`.
+Guidance for AI coding agents working in this repository — Codex reads this file directly; Claude Code reads it through `CLAUDE.md`.
 
 ## What this repo is
 
-This repo **is** the `stories` plugin — a skill-only plugin that maintains a "soul-bearing wiki" (`docs/stories/`) of a codebase: read the relevant stories before a non-trivial change, rewrite them after. It ships in two homes:
+This repo **is** the `stories` plugin: it keeps a wiki of a codebase's *why* in `docs/stories/`. A hook names the story that covers a file before the model changes it; the model rewrites the story after. There is no application code — the deliverable is three skills, one hook, and two manifests.
 
-- **Claude Code** plugin at the repo root (`.claude-plugin/`, `skills/`, `commands/`).
-- **Codex** plugin bundle in `codex/` (`.codex-plugin/`, `skills/` — the two core skills are symlinks back to the root `skills/`).
+- `skills/stories/SKILL.md` — the discipline: the canon, the before/after procedure, anchors, filing knowledge. The rules live here and nowhere else.
+- `skills/stories/writing.md` — the craft, loaded only when a page is written; also the `ARCHITECTURE.md` format.
+- `skills/stories-init/`, `skills/stories-refresh/` — the two procedures (`/stories:stories-init` · `$stories-init`, and so on).
+- `hooks/stories.py` + `hooks/hooks.json` — the gate: names the covering story on Read, holds back an unannounced edit once, reminds once at Stop. Python 3.9+ stdlib; fails open.
+- `scripts/lint-canon.py` — dev/CI health-check. Not shipped behavior.
 
-The systems layer is the shape-map: `docs/stories/systems/` pages (`kind: system`, gated via `covers:`) plus a model-derived `ARCHITECTURE.md` face at the repo root — spec: `docs/specs/2026-07-01-systems-layer-design.md`.
+Design and evidence: `docs/specs/2026-10-29-stories-2-simplify-design.md`.
 
-Design + decisions: `docs/specs/2026-06-14-stories-plugin-design.md` (§9 is the locked-decisions table). Codex porting notes: `docs/stories/library/codex-conventions.md`.
+## One fact, one place
 
-## Honor the stories discipline (dogfood)
+The principle behind the 2.0 design: every fact lives in exactly one place. Before adding a field, a file, or a restated rule, find where that fact already lives and point there instead.
 
-`docs/stories/` is this repo's own canon. Before a behavior/structure/soul change, read the covering stories — open `docs/stories/index.md` (the Atlas) and any story whose `covers:` matches the files you'll touch. After the change, update those stories plus the Atlas and `docs/stories/log.md`. The full discipline is the `stories` skill (`skills/stories/SKILL.md`); the craft is `writing-a-story`. Write stories from knowledge — read the code first, never guess.
+## Two homes, one copy
 
-## Editing the rules — keep them in sync
+The Codex bundle in `codex/` is symlinks to the root (`skills/*`, `hooks/`) plus its own manifest. Only the two manifests (`.claude-plugin/plugin.json` ↔ `codex/.codex-plugin/plugin.json`) are kept by hand; the linter checks them and the symlinks. A new skill needs a matching symlink in `codex/skills/`.
 
-The behavioral contract — especially the gate-line and its default-exempt list — is stated in **three places**: `skills/stories/SKILL.md`, `README.md`, and the design spec (plus its §9 decision table). Change the behavior ⇒ update all of them. Drift between these is the most likely bug in this repo — the linter diffs the default-exempt list across all three homes (an error, not a warning).
+## Dogfood — this repo is under its own discipline
 
-## Keep the two homes in sync
+`docs/stories/` is this repo's own canon. When the hook names a story, read it before changing the file. After a change, rewrite any story whose why shifted (and its `refreshed:`), update `ARCHITECTURE.md` if the shape moved, and keep `docs/stories/index.md` current. Cite code as `path#anchor`, never `path:line`.
 
-When the Claude Code plugin changes, update the Codex bundle in `codex/` to match (and vice versa). The two core skills are symlinked, so they can't drift. The command procedures (`commands/*.md` ↔ `codex/skills/stories-*/SKILL.md`) and the two manifests (`.claude-plugin/plugin.json` ↔ `codex/.codex-plugin/plugin.json`) are duplicated and MUST be hand-synced. Run `python3 scripts/lint-canon.py` (or `$stories-lint`) to verify the two homes haven't drifted.
+## Validate
+
+No build. Run before every commit (CI runs the same):
+
+```bash
+python3 hooks/stories.py --self-test
+python3 scripts/lint-canon.py --self-test
+python3 scripts/lint-canon.py
+```

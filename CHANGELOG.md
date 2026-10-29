@@ -4,6 +4,40 @@ All notable changes to this project are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] — 2026-10-29
+
+Simpler, so models find it easier to use: every fact lives in one place.
+
+### Added
+- A hook (`hooks/stories.py`, Claude Code and Codex): names the covering
+  story when the model reads a covered file, holds back an edit that
+  arrives before its story was named, and reminds once at the end of a
+  turn when covered code changed but its story didn't. Fails open.
+- Anchor citations: `path#anchor`, where the anchor is text that appears
+  in the file. The linter errors when an anchor disappears and warns when
+  one is ambiguous.
+- `ARCHITECTURE.md` gains an Invariants list; `*(inferred)*` marks a why
+  the model inferred rather than was told.
+- `--self-test` for the hook and the linter, both run in CI.
+
+### Changed
+- The gate is armed by the hook, not by the model classifying its change;
+  the default-exempt list is gone.
+- Frontmatter is `covers:` + `refreshed:` (stories) or `sources:`
+  (library). A page with `covers:` is a story; nothing else gates.
+- `/stories:stories-init` and `/stories:stories-refresh` are skills shared
+  by both homes; `codex/` is symlinks plus its manifest.
+- The craft (`writing-a-story`) is now `skills/stories/writing.md`, read
+  only when a page is written.
+- Refresh re-reads only stories whose covered files changed since
+  `refreshed:`.
+
+### Removed
+- `/stories-lint`, `/stories-ingest`, and the `writing-a-story` skill.
+- `docs/stories/systems/` pages, vignettes, `log.md`, page kinds, and the
+  `title:` / `kind:` / `links:` fields.
+- Line-number citations (`path:line` is now a lint error).
+
 ## [1.1.0] — 2026-07-05
 
 The verification loop closes — the audit found the discipline trusted and
