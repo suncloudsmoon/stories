@@ -1,34 +1,31 @@
 # Architecture — the `stories` plugin
 
-This repo is a **plugin** that keeps a living, story-shaped wiki of any codebase it's installed into. There is no application code here — the product is a set of markdown rule-files ("skills"), shipped into two AI coding tools (Claude Code and Codex), plus one small health-check script. The map below shows the four parts and how they depend on each other.
+This repo is a **plugin** that keeps a wiki of *why* a codebase is the way it is, inside any project it's installed into. There is no application code: the product is a few rule-files ("skills") and one small hook, shipped from a single copy into two AI coding tools, Claude Code and Codex. A health-check script keeps this repo's own wiki honest.
 
 ```mermaid
-flowchart TB
-    claude_code_home["Claude Code home\n(manifest + slash commands)"] --> core_skills["Core skills\n(the discipline + the craft)"]
-    codex_home["Codex home\n(mirrored bundle)"] -- symlinks --> core_skills
-    canon_tooling["Canon & tooling\n(dogfood wiki + lint)"] -. checks .-> claude_code_home
-    canon_tooling -. checks .-> codex_home
-    click core_skills "docs/stories/systems/core-skills.md"
-    click claude_code_home "docs/stories/systems/claude-code-home.md"
-    click codex_home "docs/stories/systems/codex-home.md"
-    click canon_tooling "docs/stories/systems/canon-tooling.md"
-    classDef new fill:#e8f5e9,stroke:#2e7d32;
-    class core_skills,claude_code_home,codex_home,canon_tooling new;
+flowchart LR
+    homes["Two homes\n(Claude Code + Codex manifests)"] --> skills["Skills\n(discipline, craft, init, refresh)"]
+    homes --> hook["Hook\n(names the covering story)"]
+    hook -. reads covers: .-> canon["Canon & tooling\n(this repo's wiki, lint, CI)"]
+    canon -. checks .-> homes
 ```
 
-| block | in plain words | more |
+| block | in plain words | why it is this way |
 |---|---|---|
-| Core skills | The rule-files that are the actual product — how the wiki is kept and how its pages are written | [core-skills](docs/stories/systems/core-skills.md) |
-| Claude Code home | The packaging that installs those rules into Claude Code, plus its four `/stories-*` commands | [claude-code-home](docs/stories/systems/claude-code-home.md) |
-| Codex home | A mirror of the same plugin for the Codex tool — same rules via symlinks, own packaging | [codex-home](docs/stories/systems/codex-home.md) |
-| Canon & tooling | This repo's own wiki (the plugin used on itself) and the script that checks nothing has drifted | [canon-tooling](docs/stories/systems/canon-tooling.md) |
+| Skills | The rules the model follows: when to read and rewrite stories (`skills/stories/SKILL.md`), how to write them (`writing.md`), and the two procedures, init and refresh. Prose only — no code. | [the-gate](docs/stories/sagas/the-gate.md), [the-craft](docs/stories/sagas/the-craft.md) |
+| Hook | `hooks/stories.py` tells the model which story covers a file it reads or edits, holds back an unannounced edit once, and reminds once at the end of a turn. It reads the wiki; it never writes it. | [the-gate](docs/stories/sagas/the-gate.md) |
+| Two homes | The Claude Code and Codex manifests. Everything else under `codex/` is a symlink to the root. | [codex-port](docs/stories/sagas/codex-port.md) |
+| Canon & tooling | This repo's own `docs/stories/`, the linter (`scripts/lint-canon.py`), and the CI that runs it. Dev-only — it ships to no one. | [the-lint](docs/stories/sagas/the-lint.md), [the-map](docs/stories/sagas/the-map.md) |
 
-## New since 2026-07-01
+## Invariants
 
-All four blocks — the shape-map itself is new (see `docs/stories/sagas/the-map.md`).
+- The hook never edits a file, and an error inside it never blocks work.
+- `codex/` holds no copy of anything except its manifest.
+- The rules live only in `skills/stories/SKILL.md`; every other document points there.
+- No user ever receives the linter.
 
 ---
 
 Deeper: `docs/stories/index.md` (the Atlas).
 
-<!-- derived by the stories plugin — source of truth: docs/stories/systems/ -->
+<!-- derived by the stories plugin — source of truth: the code and docs/stories/ -->

@@ -1,3 +1,5 @@
+> **Superseded 2026-10-29** by `docs/specs/2026-10-29-stories-2-simplify-design.md` — kept as history.
+
 # Design Spec — the systems layer (`ARCHITECTURE.md` + `kind: system`)
 
 **Date:** 2026-07-01

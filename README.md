@@ -21,38 +21,35 @@ claude plugin install stories@suncloudsmoon
 #   claude plugin marketplace add /path/to/stories
 ```
 
-Restart Claude Code to load it. The plugin stays **dormant** until a repo has `docs/stories/` — run `/stories-init` there to create one.
+Restart Claude Code to load it. The plugin stays **dormant** until a repo has `docs/stories/` — run `/stories:stories-init` there to start one.
 
 ## How it works
 
-- **Skill-only.** No hooks, no runtime scripts — an always-on skill carries the discipline (a dev-only `scripts/lint-canon.py` checks canon health but ships nothing to users). Portable — and ported to Codex (see `codex/`).
-- **Read-before-change gate.** Before a change that reshapes the repo's behavior, structure, or soul (feature, refactor, interface change, moving/deleting code) the model reads the stories whose `covers:` matches the files in play. Routine changes are **default-exempt** — bug fixes, typos, formatting, comments, dependency bumps, test-only edits — *unless* they're significant enough to change the repository, in which case they're storied too.
-- **Low friction.** Reading never interrupts you. The model proceeds on judgment and stops to ask only on a real conflict — or when something genuinely warrants your attention.
-- **Auto-author.** After a gated change, the model rewrites the affected stories in the same session — and closes by running the canon linter when the repo carries one.
-- **Deep research auto-files.** A deep-research run lands as a `research` page in the library, cross-linked into the graph.
-- **Shape-map.** Alongside the why, the plugin keeps the *shape*: `ARCHITECTURE.md` at the repo root — a plain-language block diagram of how the app is put together, every block linked (legend table) to a `docs/stories/systems/` page (`kind: system`, gated like sagas), recently added blocks highlighted. Derived from the systems pages by the model; updated as part of the same read-then-rewrite discipline.
+- **A hook points; the model reads.** When the model reads or edits a file a story covers, the plugin's hook names that story — once per session. An edit that arrives before its story was named is held back once, so the story is always read first. At the end of a turn, if covered code changed and its story didn't, the hook asks once whether the why changed.
+- **The model keeps the canon true.** After a change it rewrites the stories whose why shifted, updates `ARCHITECTURE.md` when the shape moved, and keeps the Atlas current — in the same session.
+- **Low friction.** It stops to ask only when your request contradicts a story.
+- **Anchors, not line numbers.** Stories cite code as `path#anchor` — a name that appears in the file — so citations survive edits and break only when the thing they name does.
+- **Knowledge, too.** Deep-research results and sources you hand it land in `library/`, linked to the code they shaped.
+
+The exact rules live in one place: [`skills/stories/SKILL.md`](skills/stories/SKILL.md).
 
 ## Layout
 
 ```
+ARCHITECTURE.md     # the shape — summary, diagram, block table, invariants
 docs/stories/
-  index.md      # the Atlas — read first
-  log.md        # the chronicle
-  origin.md     # why this project exists, its soul, your preferences as lore
-  sagas/        # code subsystem & flow soul
-  vignettes/    # optional file-level shorts
-  systems/      # the shape-map — one block-diagram page per segment
-  library/      # deep research, syntheses, sources, concepts
+  index.md          # the Atlas — one line per page
+  origin.md         # why the project exists, your preferences as lore
+  sagas/            # stories about code — each has covers: globs
+  library/          # research, sources, concepts
 ```
 
-Plus `ARCHITECTURE.md` at the repo root — the shape-map's plain-language face.
+## Skills
 
-## Commands
+- `/stories:stories-init` — start a wiki: interview you, write the origin story and `ARCHITECTURE.md`.
+- `/stories:stories-refresh` — reconcile stale stories with the code, prune dead pages, rebuild the Atlas and the map.
 
-- `/stories-init` — bootstrap `docs/stories/`, interview you, write the origin saga.
-- `/stories-refresh` — full cleanup: reconcile against the code, rewrite stale, delete dead canon, rebuild the Atlas.
-- `/stories-ingest <source|research>` — file knowledge into the library by hand.
-- `/stories-lint` — read-only health-check: drift, staleness, dead links/citations, two-homes sync.
+The hook needs `python3` on your `PATH`. Without it the skill still works; the model finds covering stories itself.
 
 ## Coexistence
 
@@ -60,11 +57,11 @@ Plus `ARCHITECTURE.md` at the repo root — the shape-map's plain-language face.
 
 ## Codex
 
-A Codex plugin bundle lives in `codex/` — `.codex-plugin/` plus skills, with the two core skills symlinked to the root `skills/` (single source, no drift). Same behavior, Codex-native packaging; invoke the commands as `$stories-init` etc. See `codex/README.md` for install. Porting notes: `docs/stories/library/codex-conventions.md`.
+`codex/` is the same plugin for Codex: every skill and the hooks are symlinks to the root, so only the manifest is separate. Invoke the skills as `$stories-init` and `$stories-refresh`; Codex asks once to trust the plugin's hooks. Install: [`codex/README.md`](codex/README.md).
 
 ## Design
 
-See `docs/specs/2026-06-14-stories-plugin-design.md` for the full design and the decisions behind it.
+[`docs/specs/2026-10-29-stories-2-simplify-design.md`](docs/specs/2026-10-29-stories-2-simplify-design.md) — the 2.0 design and the evidence behind it.
 
 ## License
 

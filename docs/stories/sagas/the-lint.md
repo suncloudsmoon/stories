@@ -1,19 +1,16 @@
 ---
-title: The Lint — Making Drift Visible
-kind: saga
-covers: ["scripts/lint-canon.py", "commands/stories-lint.md"]
-links: ["[[origin]]", "[[the-gate]]", "[[codex-port]]"]
-refreshed: 2026-07-05
+covers: ["scripts/**", ".github/**", "skills/stories-refresh/SKILL.md"]
+refreshed: 2026-10-29
 ---
 
 # The Lint — Making Drift Visible
 
-**The hook.** A skill-only discipline ([[the-gate]]) has exactly one failure mode: it is best-effort, so the canon can quietly fall behind the code and no one notices. Lint is the canary — it makes that drift *visible* without pretending to prevent it.
+**The hook.** A wiki kept by a model can fall behind the code without anyone noticing. Lint is the canary — it makes that drift *visible* without pretending to prevent it.
 
-**The world before.** Refresh already rewrites stale canon, but refresh is heavy and you run it deliberately. Between refreshes nothing told you a story had gone stale, a `covers:` had gone dead, or — once Codex arrived ([[codex-port]]) — that the two homes had drifted apart. A trust-based system that can rot silently fails in the worst way: invisibly.
+**The world before.** v1's linter grew one check at a time, and many of them policed copies: the Atlas's inline `covers:` against each page's frontmatter, the default-exempt list across three files, each command against its Codex twin. Every check was correct, and every one existed because a fact lived in two places. A checker that mostly referees duplicates is a symptom, not a safeguard.
 
-**The decision.** Split diagnosis from treatment. `scripts/lint-canon.py` is a read-only mechanical pass: broken `[[links]]`, dead `covers:` and `path:line` citations, manifest drift between the two `plugin.json`, **command drift** (each Claude Code command vs its Codex skill, compared by step structure — the sync rule from [[codex-port]] made mechanical), staleness (a covered file's git commit newer than the story's `refreshed:` date — the message names the file that moved), coverage (tracked or new files no story covers, surfaced as info — visibility, not a blocker), the exempt list across its three contract homes (`scripts/lint-canon.py:44`), a missing `path:line` citation on any gate-bearing page, the Atlas's inline covers against each page's frontmatter, and the systems layer (ARCHITECTURE.md ↔ systems pages ↔ legend). It exits non-zero on errors so CI can hold the line. `/stories-lint` wraps it with the judgment regex can't have — *is this contradiction real? does this gap deserve a story?* — and routes rewrites to refresh. **Lint diagnoses; refresh treats.**
+**The decision.** 2.0 deleted the copies, and their checks went with them. What remains checks only facts that can rot on their own: `[[links]]` that point nowhere, `covers:` globs that match nothing or span lines the gate can't read, anchors whose text has left the file (`scripts/lint-canon.py#def check_citations`), pages missing from the Atlas, `ARCHITECTURE.md` links, and — in this repo — the two manifests and the Codex symlinks. It reads `covers:` with the hook's own parser (`scripts/lint-canon.py#One parser for covers:`), so it can never accept a line the gate can't read. A story whose covered files were committed after its `refreshed:` date gets a REVIEW line, which is exactly the work list `stories-refresh` starts from (`skills/stories-refresh/SKILL.md#its REVIEW lines are this list`). Each verdict is proven on a throwaway canon (`scripts/lint-canon.py#def self_test`), and CI runs both self-tests before the lint itself (`.github/workflows/lint.yml#Self-tests`).
 
-**What it means.** This is the one script in a deliberately script-free system — and it earns the exception by being *tooling, not runtime*. The portable skill-only discipline ([[the-gate]]) still ships untouched; lint is a dev/CI aid for keeping the canon honest, never part of what travels to users. It runs on any repo with a `docs/stories/` (pass the path as an argument); the plugin-only checks — manifest drift, command drift, the exempt-list sync — skip themselves when those files are absent, so a consumer's wiki lints just as well as this one. And since v1.1.0 lint is no longer a deliberate act: the after-change sweep and every write-path command close by running it when the script is present — the loop the audit found open is shut at the cheapest point, the same session that made the change. The standing test: if lint ever passes while the canon is plainly wrong, a check is too weak — add one. Drift you can see is drift you can fix.
+**What it means.** Lint diagnoses; refresh treats. The script is dev tooling, not something the plugin ships — users get the skills and the hook. The standing test still holds: if lint passes while the canon is plainly wrong, a check is missing; but if a new check would compare two copies of a fact, delete a copy instead.
 
-See [[the-gate]] for the failure mode it guards, [[codex-port]] for the sync it enforces.
+See [[the-gate]] for what a dead `covers:` does to the hook, [[codex-port]] for the two homes it watches.

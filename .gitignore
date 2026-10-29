@@ -6,3 +6,7 @@ node_modules/
 
 # local reference material (not part of the plugin)
 .ref/
+
+# plan-execution scratch (superpowers)
+.superpowers/
+__pycache__/
